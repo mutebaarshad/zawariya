@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Account Sign In | ZAWARIA Luxury Couture</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-page-bg">
+
+    <!-- FLOATING BACKGROUND PETALS -->
+    <div class="floating-flower-bg">
+        <span class="flower-petal fp-1">🌸</span>
+        <span class="flower-petal fp-2">✨</span>
+        <span class="flower-petal fp-3">🌸</span>
+        <span class="flower-petal fp-4">💎</span>
+        <span class="flower-petal fp-5">✨</span>
+    </div>
+
+    <!-- TOP BAR NAVIGATION -->
+    <nav style="background: rgba(26, 3, 40, 0.85); border-bottom: 1px solid rgba(212, 175, 55, 0.3);">
+        <div class="brand-logo">
+            <h1><a href="/" style="color: var(--primary-gold);">ZAWARIA</a></h1>
+            <p style="color: var(--soft-pink);">Grace in Every Style</p>
+        </div>
+        <div class="nav-actions">
+            <a href="/" class="nav-btn nav-btn-outline" style="border-color: var(--primary-gold); color: var(--primary-gold);">
+                <i class="fa-solid fa-arrow-left"></i> Return to Store
+            </a>
+        </div>
+    </nav>
+
+    <!-- LOGIN WRAPPER CONTAINER -->
+    <div class="login-wrapper">
+        <div class="login-glass-card">
+            
+            <div style="text-align: center;">
+                <span class="login-header-tag"><i class="fa-solid fa-gem"></i> Client Account Portal</span>
+                <h2 class="login-title">Welcome Back</h2>
+                <p class="login-subtitle">Sign in to track orders, manage bespoke tailoring & order history</p>
+            </div>
+
+            <!-- PORTAL SWITCH TABS -->
+            <div class="portal-tab-group">
+                <a href="/login" class="portal-tab"><i class="fa-solid fa-user-gear"></i> Admin Login</a>
+                <a href="/client-login" class="portal-tab active"><i class="fa-solid fa-user"></i> Client Login</a>
+            </div>
+
+            <!-- FLASHED ALERTS -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div style="padding: 12px 16px; margin-bottom: 20px; border-radius: 8px; font-size: 13.5px; background: #FFF3CD; border: 1px solid #FFEBAA; color: #856404; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <div>{{ message }}</div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <!-- CLIENT LOGIN FORM -->
+            <form action="/client-login" method="POST">
+                
+                <div class="form-group">
+                    <label style="font-size: 12px; color: var(--primary-purple); font-weight: 700; margin-bottom: 8px; display: block; text-transform: uppercase;">Email Address</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fa-solid fa-envelope input-icon"></i>
+                        <input type="email" name="email" class="form-control-iconic" required placeholder="ayesha@example.com" autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="font-size: 12px; color: var(--primary-purple); font-weight: 700; margin-bottom: 8px; display: block; text-transform: uppercase;">Password</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="clientPasswordInput" name="password" class="form-control-iconic" required placeholder="••••••••" autocomplete="current-password">
+                        <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('clientPasswordInput', this)"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-gold" style="width: 100%; padding: 14px; font-size: 14px; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Sign In to Account
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(61, 16, 89, 0.08);">
+                <p style="font-size: 13.5px; color: var(--text-dark);">
+                    Don't have a ZAWARIA account? <a href="/register" style="color: var(--accent-pink); font-weight: 700; text-decoration: underline;">Create New Account</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>

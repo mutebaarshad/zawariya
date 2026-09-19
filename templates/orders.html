@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ZAWARIA - Orders</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fff8fb;
+            color: #333;
+        }
+
+        .navbar {
+            background: #fff;
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #c75a87;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #444;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #c75a87;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #c75a87;
+            margin-bottom: 30px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .order-id {
+            font-size: 20px;
+            font-weight: bold;
+            color: #c75a87;
+        }
+
+        .status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #f7e4ed;
+            color: #c75a87;
+            font-weight: bold;
+        }
+
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #fff8fb;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .info-box strong {
+            color: #555;
+        }
+
+        .items {
+            margin-top: 20px;
+        }
+
+        .items h3 {
+            color: #c75a87;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 20px;
+            font-weight: bold;
+            color: #c75a87;
+            margin-top: 20px;
+        }
+
+        .empty {
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .empty h2 {
+            color: #c75a87;
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-links a {
+                margin-left: 8px;
+                font-size: 14px;
+            }
+
+            .order-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <div class="logo">
+            ZAWARIA
+        </div>
+
+        <div class="nav-links">
+            <a href="/">Website</a>
+            <a href="/admin">Dashboard</a>
+            <a href="/logout">Logout</a>
+        </div>
+
+    </div>
+
+
+    <div class="container">
+
+        <h1>📦 Customer Orders</h1>
+
+        {% if orders %}
+
+            {% for order in orders %}
+
+                <div class="order-card">
+
+                    <div class="order-header">
+
+                        <div class="order-id">
+                            Order #{{ order.id }}
+                        </div>
+
+                        <div class="status">
+                            {{ order.status }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="order-info">
+
+                        <div class="info-box">
+                            <strong>Customer:</strong><br>
+                            {{ order.customer_name }}
+                        </div>
+
+                        <div class="info-box">
+                            <strong>Phone:</strong><br>
+                            {{ order.phone }}
+                        </div>
+
+                        <div class="info-box">
+                            <strong>Address:</strong><br>
+                            {{ order.address }}
+                        </div>
+
+                        <div class="info-box">
+                            <strong>Payment:</strong><br>
+                            {{ order.payment_method }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="items">
+
+                        <h3>🛍️ Order Details</h3>
+
+                        <p>
+                            <strong>Product:</strong>
+                            {{ order.product_name }}
+                        </p>
+
+                        <p>
+                            <strong>Size:</strong>
+                            {{ order.size }}
+                        </p>
+
+                        <p>
+                            <strong>Customization:</strong>
+                            {{ order.customization }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="total">
+                        Total: Rs. {{ order.total }}
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+
+                <h2>📭 No Orders Yet</h2>
+
+                <p>
+                    Customer orders will appear here when they place an order.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

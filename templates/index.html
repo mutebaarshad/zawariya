@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAWARIA | Luxury Pakistani Fashion & Custom Couture</title>
+    <meta name="description" content="Assalam-o-Alaikum & Welcome to ZAWARIA Luxury Collection. Timeless Pakistani dresses crafted with grace, 50% advance payment guarantee, and custom stitching options.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- FLOATING ANIMATED BACKGROUND FLOWERS -->
+    <div class="floating-flower-bg">
+        <span class="flower-petal fp-1">🌸</span>
+        <span class="flower-petal fp-2">🌺</span>
+        <span class="flower-petal fp-3">🌷</span>
+        <span class="flower-petal fp-4">🌸</span>
+        <span class="flower-petal fp-5">💐</span>
+    </div>
+
+    <!-- WELCOME GREETING SPLASH MODAL -->
+    <div class="modal-overlay" id="welcomeModal" style="display: flex;">
+        <div class="modal-card" style="max-width: 580px; text-align: center; border: 2px solid var(--primary-gold); background: linear-gradient(135deg, #FFFFFF 0%, #FAF4FC 100%);">
+            <span class="modal-close" onclick="closeWelcomeModal()">&times;</span>
+            <div style="font-size: 50px; color: var(--accent-pink); margin-bottom: 10px;">🌸✨</div>
+            <h2 style="font-family: var(--font-heading); color: var(--primary-purple); font-size: 28px; margin-bottom: 8px;">Assalam-o-Alaikum & Welcome to ZAWARIA</h2>
+            <p style="font-family: var(--font-subheading); color: var(--accent-pink); font-size: 16px; font-style: italic; margin-bottom: 15px;">Your elegance, our passion — discover something beautiful today.</p>
+            
+            <div style="background: rgba(61, 16, 89, 0.04); padding: 18px; border-radius: 8px; border: 1px dashed var(--border-light); margin-bottom: 25px; font-size: 14px; color: var(--text-dark); line-height: 1.7;">
+                <p>Welcome to <strong>ZAWARIA</strong>, where timeless Pakistani fashion meets modern grace. From elegant dresses to delicate jewelry, every piece is chosen to make you feel confident, graceful, and unforgettable.</p>
+                <p style="margin-top: 10px; font-size: 12.5px; color: #8C6A28; font-weight: 700;">💳 50% Advance Payment | 🚚 All Over Pakistan Delivery (Rs. 350) | ✂️ Custom Stitching</p>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="closeWelcomeModal()" class="btn-gold" style="padding: 12px 28px;"><i class="fa-solid fa-gem"></i> Explore Collection</button>
+                <a href="https://wa.me/923040530538" target="_blank" class="btn-card-secondary" style="padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px;"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="top-bar">
+        <span>🌸✨ Assalam-o-Alaikum & Welcome to ZAWARIA ✨🌸</span>
+        <span>🚚 Delivery All Over Pakistan (Rs. 350) | 💳 50% Advance + Remaining Before Dispatch</span>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <nav>
+        <a href="/" class="brand-logo-link">
+            <img src="{{ url_for('static', filename='images/zawariya_logo.svg') }}" alt="ZAWARIA Luxury Logo" class="brand-logo-img">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="/" class="active" data-i18n="nav_home">Home</a></li>
+            <li><a href="/collections" data-i18n="nav_collections">Collections</a></li>
+            <li><a href="/jewelry" data-i18n="nav_jewelry">Jewelry</a></li>
+            <li><a href="/contact" data-i18n="nav_contact">Contact Us</a></li>
+            {% if session.get('user_id') or session.get('user_name') %}
+                <li><a href="/my-account" data-i18n="nav_account"><i class="fa-solid fa-user"></i> My Account</a></li>
+            {% else %}
+                <li><a href="/client-login" data-i18n="nav_login">Client Login</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="nav-actions">
+            <button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+                <i class="fa-solid fa-moon"></i> <span>Dark</span>
+            </button>
+            <button onclick="toggleLanguage()" class="lang-toggle-btn" id="langToggleBtn" title="Switch Language (English / اردو)">
+                <i class="fa-solid fa-globe"></i> <span>اردو</span>
+            </button>
+            <button onclick="openLiveSearchModal()" class="cart-icon-btn" style="cursor: pointer;" title="Search Store">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            <a href="/collections?wishlist=1" class="cart-icon-btn" title="Saved Wishlist">
+                <i class="fa-solid fa-heart" style="color: var(--accent-pink);"></i>
+                <span class="cart-count" id="wishlistCount" style="background: var(--primary-gold); color: #1a0328;">0</span>
+            </a>
+            <a href="/cart" class="cart-icon-btn" title="Shopping Cart">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+            {% if session.get('admin') %}
+                <a href="/admin" class="nav-btn nav-btn-outline" data-i18n="nav_admin"><i class="fa-solid fa-lock"></i> Admin Dashboard</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="hero-text">
+            <span class="hero-tag">🌸✨ Assalam-o-Alaikum & Welcome to ZAWARIA ✨🌸</span>
+            <h1 class="hero-title">Grace in <span>Every Style</span></h1>
+            <p class="hero-subtitle">Your elegance, our passion — discover something beautiful today. Explore our carefully selected Pakistani dresses designed with elegance, comfort, and timeless beauty.</p>
+            <div class="hero-btns">
+                <a href="#featured" class="btn-gold">Explore Collection <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="https://wa.me/923040530538" target="_blank" class="btn-outline-light"><i class="fa-brands fa-whatsapp"></i> WhatsApp Order</a>
+            </div>
+        </div>
+
+        <div class="hero-image-grid">
+            <div class="hero-card">
+                <img src="{{ url_for('static', filename='images/' + products[0]['image']) }}" alt="Zawaria Hero Dress">
+                <div class="hero-badge">
+                    <h4>{{ products[0]['name'] }}</h4>
+                    <p>50% Advance | Custom Stitching Available</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WELCOME GREETING BANNER -->
+    <div style="background: linear-gradient(135deg, var(--soft-pink) 0%, #FFFFFF 100%); padding: 35px 6%; text-align: center; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); position: relative; z-index: 2;">
+        <h3 style="font-family: var(--font-heading); color: var(--primary-purple); font-size: 26px;">🌸✨ Welcome to ZAWARIA LUXURY COLLECTION ✨🌸</h3>
+        <p style="font-family: var(--font-subheading); color: var(--accent-pink); font-size: 16px; margin: 8px 0;">Grace in Every Style — Timeless Pakistani Fashion, Beautifully Crafted for the Modern Woman</p>
+    </div>
+
+    <!-- POLICY GUARANTEE BANNER -->
+    <div class="policy-banner">
+        <div class="policy-item">
+            <div class="policy-icon"><i class="fa-solid fa-receipt"></i></div>
+            <div class="policy-text">
+                <h4>50% Advance Payment</h4>
+                <p>Pay 50% to confirm order, 50% remaining before dispatch</p>
+            </div>
+        </div>
+        <div class="policy-item">
+            <div class="policy-icon"><i class="fa-solid fa-truck-fast"></i></div>
+            <div class="policy-text">
+                <h4>Delivery All Over Pakistan</h4>
+                <p>Flat Rs. 350 delivery fee in 25–28 Working Days</p>
+            </div>
+        </div>
+        <div class="policy-item">
+            <div class="policy-icon"><i class="fa-solid fa-scissors"></i></div>
+            <div class="policy-text">
+                <h4>Custom Stitching</h4>
+                <p>Tailored precisely to S, M, L, XL or custom measurements</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURED COLLECTION -->
+    <section class="catalog-container" id="featured">
+        <div class="section-header">
+            <span class="section-tag">Curated Outfits</span>
+            <h2 class="section-title">Featured Luxury Collection</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <div class="product-image-wrap">
+                    <span class="advance-badge">50% Advance</span>
+                    
+                    <!-- WISHLIST & QUICK VIEW ACTION OVERLAY -->
+                    <div class="product-card-overlay-actions">
+                        <button onclick="toggleWishlist({{ product['id'] }}, this)" class="icon-action-btn wishlist-btn-{{ product['id'] }}" title="Save to Favorites">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <button onclick="openQuickView({{ product['id'] }})" class="icon-action-btn" title="Quick Preview">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <img src="{{ url_for('static', filename='images/' + product['image']) }}" 
+                         id="prod-img-{{ product['id'] }}" 
+                         class="product-img" 
+                         alt="{{ product['name'] }}">
+
+                    <!-- Interactive AI Multi-Angle View Switcher -->
+                    <div class="angle-thumbs">
+                        <img src="{{ url_for('static', filename='images/' + product['image']) }}" 
+                             class="angle-dot active" 
+                             data-target="prod-img-{{ product['id'] }}"
+                             data-src="{{ url_for('static', filename='images/' + product['image']) }}"
+                             onclick="switchAngleBtn(this)" 
+                             title="Front Angle">
+                        {% if product['image_side'] %}
+                        <img src="{{ url_for('static', filename='images/' + product['image_side']) }}" 
+                             class="angle-dot" 
+                             data-target="prod-img-{{ product['id'] }}"
+                             data-src="{{ url_for('static', filename='images/' + product['image_side']) }}"
+                             onclick="switchAngleBtn(this)" 
+                             title="Side Profile">
+                        {% endif %}
+                        {% if product['image_back'] %}
+                        <img src="{{ url_for('static', filename='images/' + product['image_back']) }}" 
+                             class="angle-dot" 
+                             data-target="prod-img-{{ product['id'] }}"
+                             data-src="{{ url_for('static', filename='images/' + product['image_back']) }}"
+                             onclick="switchAngleBtn(this)" 
+                             title="Back View">
+                        {% endif %}
+                        {% if product['image_detail'] %}
+                        <img src="{{ url_for('static', filename='images/' + product['image_detail']) }}" 
+                             class="angle-dot" 
+                             data-target="prod-img-{{ product['id'] }}"
+                             data-src="{{ url_for('static', filename='images/' + product['image_detail']) }}"
+                             onclick="switchAngleBtn(this)" 
+                             title="Close-Up Detail">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <span class="product-category">{{ product['category'] }}</span>
+                    <h3 class="product-title">{{ product['name'] }}</h3>
+                    
+                    <div class="product-price-row">
+                        <span class="price-main">Rs. {{ "{:,.0f}".format(product['price']) }}</span>
+                        <span class="price-advance">Advance: Rs. {{ "{:,.0f}".format(product['price'] * 0.5) }}</span>
+                    </div>
+
+                    <div class="product-actions">
+                        <a href="/product/{{ product['id'] }}" class="btn-card-secondary">View Details</a>
+                        <button data-id="{{ product['id'] }}" 
+                                data-name="{{ product['name'] }}" 
+                                data-price="{{ product['price'] }}" 
+                                data-image="{{ product['image'] }}" 
+                                onclick="handleAddToCartBtn(this)" 
+                                class="btn-card-primary">
+                                <i class="fa-solid fa-bag-shopping"></i> Add To Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- VERIFIED CLIENT TESTIMONIALS SECTION -->
+    <section style="background: linear-gradient(135deg, #1A0328 0%, #0A3A31 100%); color: white; padding: 60px 0 40px 0; position: relative; z-index: 2;">
+        <div class="section-header" style="margin-top: 0;">
+            <span class="section-tag" style="color: var(--primary-gold);">Client Experience</span>
+            <h2 class="section-title" style="color: white;">Loved by Elegant Women Across Pakistan</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="reviews-grid">
+            <div class="review-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"I ordered the Rang-e-Jan frock for a family wedding in Lahore. The embroidery and raw silk fabric exceeded my expectations! The 50% advance process was completely smooth."</p>
+                <div class="review-author">
+                    <div class="author-avatar">AK</div>
+                    <div class="author-info">
+                        <h5>Ayesha Khan</h5>
+                        <span><i class="fa-solid fa-circle-check"></i> Verified Buyer — Lahore</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"ZAWARIA's custom stitching service is a lifesaver! I gave my exact measurements and the dress fit like a dream. Beautiful craftsmanship and fast customer support."</p>
+                <div class="review-author">
+                    <div class="author-avatar">SC</div>
+                    <div class="author-info">
+                        <h5>Saba Chaudhry</h5>
+                        <span><i class="fa-solid fa-circle-check"></i> Verified Buyer — Islamabad</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"The Siyaah ensemble in black is pure luxury. Heavy detailing, neat seams, and sheer sleeves as promised. Will definitely order from the festive line again!"</p>
+                <div class="review-author">
+                    <div class="author-avatar">ZF</div>
+                    <div class="author-info">
+                        <h5>Zainab Fatima</h5>
+                        <span><i class="fa-solid fa-circle-check"></i> Verified Buyer — Karachi</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SIZE CHART MODAL LINK SECTION -->
+    <div style="background: var(--bg-white); padding: 50px 6%; text-align: center; border-top: 1px solid var(--border-light); position: relative; z-index: 2;">
+        <h3 style="font-family: var(--font-heading); color: var(--primary-purple); font-size: 26px;">📏 ZAWARIA Size Chart & Custom Fitting</h3>
+        <p style="color: var(--text-muted); margin: 10px 0 20px 0;">Ensure perfect fitting before ordering. Custom size stitching is also available.</p>
+        <button onclick="openSizeModal()" class="btn-gold"><i class="fa-solid fa-ruler-combined"></i> Open Size Chart</button>
+    </div>
+
+    <!-- ADD TO CART NOTIFICATION TOAST / MODAL -->
+    <div class="modal-overlay" id="cartToastModal">
+        <div class="modal-card" style="max-width: 440px; text-align: center;">
+            <span class="modal-close" onclick="closeCartToast()">&times;</span>
+            <div style="font-size: 40px; color: var(--primary-gold); margin-bottom: 10px;"><i class="fa-solid fa-circle-check"></i></div>
+            <h3 style="font-family: var(--font-heading); color: var(--primary-purple);">Added to Cart!</h3>
+            <p id="toastProductName" style="font-weight: 700; font-size: 16px; margin: 8px 0; color: var(--primary-purple);"></p>
+            <p id="toastAdvancePrice" style="color: #8C6A28; background: #FFF9EC; padding: 8px; border-radius: 6px; font-size: 13px; font-weight: 600; margin-bottom: 20px;"></p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button onclick="closeCartToast()" class="btn-card-secondary">Continue Shopping</button>
+                <a href="/cart" class="btn-gold" style="display: inline-block; text-align: center; padding: 10px;">Go to Cart</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE STORE SEARCH MODAL -->
+    <div class="modal-overlay" id="liveSearchModal">
+        <div class="modal-card" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeLiveSearchModal()">&times;</span>
+            <h3 style="font-family: var(--font-heading); color: var(--primary-purple); font-size: 22px; margin-bottom: 5px;">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--primary-gold);"></i> Search ZAWARIA Catalog
+            </h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Search by outfit name, fabric type, category or style</p>
+
+            <div style="position: relative;">
+                <input type="text" id="liveSearchInput" onkeyup="performLiveSearch()" placeholder="Type to search e.g. Silk, Frock, Rang-e-Jan, Siyaah..." class="form-control" style="padding-left: 40px; font-size: 15px; border-radius: 30px;">
+                <i class="fa-solid fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888;"></i>
+            </div>
+
+            <div class="search-results-list" id="searchResultsContainer">
+                <p style="text-align: center; color: var(--text-muted); padding: 30px 0; font-size: 13.5px;">Type a keyword above to find outfits instantly...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK VIEW MODAL -->
+    <div class="modal-overlay" id="quickViewModal">
+        <div class="modal-card" style="max-width: 780px;">
+            <span class="modal-close" onclick="closeQuickViewModal()">&times;</span>
+            <div id="quickViewContent" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <!-- Populated dynamically by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SIZE CHART MODAL -->
+    <div class="modal-overlay" id="sizeModal">
+        <div class="modal-card">
+            <span class="modal-close" onclick="closeSizeModal()">&times;</span>
+            <h3 style="font-family: var(--font-heading); color: var(--primary-purple); margin-bottom: 15px;">ZAWARIA Standard Size Guide</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Size</th>
+                        <th>Chest</th>
+                        <th>Waist</th>
+                        <th>Hip</th>
+                        <th>Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Small (S)</strong></td><td>34"</td><td>28"</td><td>36"</td><td>52"</td></tr>
+                    <tr><td><strong>Medium (M)</strong></td><td>36"</td><td>30"</td><td>38"</td><td>53"</td></tr>
+                    <tr><td><strong>Large (L)</strong></td><td>38"</td><td>32"</td><td>40"</td><td>54"</td></tr>
+                    <tr><td><strong>XL</strong></td><td>40"</td><td>34"</td><td>42"</td><td>55"</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/923040530538" target="_blank" class="floating-whatsapp" title="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <p style="font-family: var(--font-heading); color: var(--primary-gold); font-size: 18px; margin-bottom: 12px; letter-spacing: 2px;">Connect with ZAWARIA</p>
+            <div style="display: flex; justify-content: center; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <a href="https://www.instagram.com/zawar_iaa?stkn=MWs2cjUwN3djYm91dA==" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; color: #fff; background: rgba(255,255,255,0.08); border: 1px solid var(--border-light); padding: 8px 18px; border-radius: 25px; font-size: 13px; text-decoration: none;">
+                    <i class="fa-brands fa-instagram" style="font-size: 16px; color: #E1306C;"></i> Instagram
+                </a>
+                <a href="https://www.tiktok.com/@zawar_ia?_r=1&_t=ZS-99jKQJmPCd7" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; color: #fff; background: rgba(255,255,255,0.08); border: 1px solid var(--border-light); padding: 8px 18px; border-radius: 25px; font-size: 13px; text-decoration: none;">
+                    <i class="fa-brands fa-tiktok" style="font-size: 16px;"></i> TikTok
+                </a>
+                <a href="https://wa.me/923040530538" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; color: #fff; background: rgba(255,255,255,0.08); border: 1px solid var(--border-light); padding: 8px 18px; border-radius: 25px; font-size: 13px; text-decoration: none;">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 16px; color: #25D366;"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 ZAWARIA Luxury Fashion. All Rights Reserved. | 📞 0304-0530538</p>
+        </div>
+    </footer>
+
+    <script>
+        const storeProducts = [
+            {% for product in products %}
+            {
+                id: {{ product['id'] }},
+                name: "{{ product['name'] }}",
+                category: "{{ product['category'] }}",
+                price: {{ product['price'] }},
+                image: "{{ product['image'] }}",
+                image_side: "{{ product['image_side'] or '' }}",
+                image_back: "{{ product['image_back'] or '' }}",
+                image_detail: "{{ product['image_detail'] or '' }}",
+                description: `{{ product['description'] | replace('\n', ' ') }}`
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        ];
+
+        function switchAngle(imgId, newSrc, dotElem) {
+            document.getElementById(imgId).src = newSrc;
+            let dots = dotElem.parentElement.getElementsByClassName('angle-dot');
+            for (let d of dots) d.classList.remove('active');
+            dotElem.classList.add('active');
+        }
+
+        function switchAngleBtn(dotElem) {
+            let imgId = dotElem.getAttribute('data-target');
+            let newSrc = dotElem.getAttribute('data-src');
+            switchAngle(imgId, newSrc, dotElem);
+        }
+
+        function openWelcomeModal() { document.getElementById('welcomeModal').style.display = 'flex'; }
+        function closeWelcomeModal() {
+            document.getElementById('welcomeModal').style.display = 'none';
+            sessionStorage.setItem('zawaria_greeted', 'true');
+        }
+
+        function openSizeModal() { document.getElementById('sizeModal').style.display = 'flex'; }
+        function closeSizeModal() { document.getElementById('sizeModal').style.display = 'none'; }
+
+        function closeCartToast() { document.getElementById('cartToastModal').style.display = 'none'; }
+
+        function updateCartBadge() {
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cartCount').innerText = totalItems;
+        }
+
+        function updateWishlistBadge() {
+            let wishlist = JSON.parse(localStorage.getItem('zawaria_wishlist') || '[]');
+            document.getElementById('wishlistCount').innerText = wishlist.length;
+
+            // Highlight hearts
+            wishlist.forEach(id => {
+                let btns = document.querySelectorAll('.wishlist-btn-' + id);
+                btns.forEach(b => {
+                    b.classList.add('active');
+                    b.innerHTML = '<i class="fa-solid fa-heart"></i>';
+                });
+            });
+        }
+
+        function toggleWishlist(id, btn) {
+            let wishlist = JSON.parse(localStorage.getItem('zawaria_wishlist') || '[]');
+            let idx = wishlist.indexOf(id);
+            if (idx > -1) {
+                wishlist.splice(idx, 1);
+                if (btn) {
+                    btn.classList.remove('active');
+                    btn.innerHTML = '<i class="fa-regular fa-heart"></i>';
+                }
+            } else {
+                wishlist.push(id);
+                if (btn) {
+                    btn.classList.add('active');
+                    btn.innerHTML = '<i class="fa-solid fa-heart"></i>';
+                }
+            }
+            localStorage.setItem('zawaria_wishlist', JSON.stringify(wishlist));
+            updateWishlistBadge();
+        }
+
+        function openLiveSearchModal() {
+            document.getElementById('liveSearchModal').style.display = 'flex';
+            document.getElementById('liveSearchInput').focus();
+        }
+        function closeLiveSearchModal() {
+            document.getElementById('liveSearchModal').style.display = 'none';
+        }
+
+        function performLiveSearch() {
+            const query = document.getElementById('liveSearchInput').value.toLowerCase().trim();
+            const container = document.getElementById('searchResultsContainer');
+
+            if (!query) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 30px 0; font-size: 13.5px;">Type a keyword above to find outfits instantly...</p>';
+                return;
+            }
+
+            const matches = storeProducts.filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                p.category.toLowerCase().includes(query) || 
+                p.description.toLowerCase().includes(query)
+            );
+
+            if (matches.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #d9534f; padding: 30px 0;">No outfits found matching "' + query + '"</p>';
+                return;
+            }
+
+            let html = '';
+            matches.forEach(p => {
+                html += `
+                    <div class="search-item-card">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <img src="/static/images/${p.image}" style="width: 50px; height: 60px; object-fit: cover; border-radius: 6px;">
+                            <div>
+                                <strong style="font-size: 15px; color: var(--primary-purple);">${p.name}</strong><br>
+                                <small style="color: var(--accent-pink); font-weight: 600;">${p.category}</small>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <strong style="font-size: 15px; color: var(--primary-purple);">Rs. ${p.price.toLocaleString()}</strong><br>
+                            <small style="color: #8C6A28; font-size: 11px;">Advance: Rs. ${(p.price * 0.5).toLocaleString()}</small><br>
+                            <a href="/product/${p.id}" class="btn-card-primary" style="padding: 4px 10px; font-size: 11px; margin-top: 4px; display: inline-block;">View Item</a>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function openQuickView(id) {
+            const p = storeProducts.find(item => item.id === id);
+            if (!p) return;
+
+            const content = document.getElementById('quickViewContent');
+            content.innerHTML = `
+                <div>
+                    <div style="height: 380px; border-radius: 8px; overflow: hidden; background: #FAF4FC; border: 1px solid var(--border-light);">
+                        <img id="qvMainImg" src="/static/images/${p.image}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                </div>
+                <div>
+                    <span style="font-size: 11px; color: var(--accent-pink); font-weight: 700; text-transform: uppercase;">${p.category}</span>
+                    <h2 style="font-family: var(--font-heading); color: var(--primary-purple); font-size: 24px; margin: 4px 0 10px 0;">${p.name}</h2>
+                    
+                    <div style="background: #FFF9EC; padding: 12px; border-radius: 8px; border: 1px solid #F3E0B5; margin-bottom: 15px;">
+                        <strong style="font-size: 20px; color: var(--primary-purple);">Rs. ${p.price.toLocaleString()}</strong>
+                        <div style="font-size: 12px; color: #8C6A28; font-weight: 600; margin-top: 4px;">
+                            <i class="fa-solid fa-circle-check"></i> 50% Advance Due Now: Rs. ${(p.price * 0.5).toLocaleString()}
+                        </div>
+                    </div>
+
+                    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">${p.description}</p>
+
+                    <div style="display: flex; gap: 12px;">
+                        <a href="/product/${p.id}" class="btn-card-secondary" style="flex: 1; text-align: center; padding: 12px;">Full Product Page</a>
+                        <button onclick="handleAddToCartFromQV(${p.id}, '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${p.image}')" class="btn-gold" style="flex: 1;"><i class="fa-solid fa-bag-shopping"></i> Add To Cart</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('quickViewModal').style.display = 'flex';
+        }
+
+        function handleAddToCartFromQV(id, name, price, image) {
+            closeQuickViewModal();
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            let existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ id: id, name: name, price: price, image: image, size: 'M', qty: 1 });
+            }
+            localStorage.setItem('zawaria_cart', JSON.stringify(cart));
+            updateCartBadge();
+            document.getElementById('toastProductName').innerText = name;
+            document.getElementById('toastAdvancePrice').innerText = "50% Advance Due at Checkout: Rs. " + (price * 0.5).toLocaleString();
+            document.getElementById('cartToastModal').style.display = 'flex';
+        }
+
+        function closeQuickViewModal() {
+            document.getElementById('quickViewModal').style.display = 'none';
+        }
+
+        function handleAddToCartBtn(btn) {
+            let id = parseInt(btn.getAttribute('data-id'));
+            let name = btn.getAttribute('data-name');
+            let price = parseFloat(btn.getAttribute('data-price'));
+            let image = btn.getAttribute('data-image');
+
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            let existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ id: id, name: name, price: price, image: image, size: 'M', qty: 1 });
+            }
+            localStorage.setItem('zawaria_cart', JSON.stringify(cart));
+            updateCartBadge();
+
+            document.getElementById('toastProductName').innerText = name;
+            document.getElementById('toastAdvancePrice').innerText = "50% Advance Due at Checkout: Rs. " + (price * 0.5).toLocaleString();
+            document.getElementById('cartToastModal').style.display = 'flex';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+            updateWishlistBadge();
+            if (!sessionStorage.getItem('zawaria_greeted')) {
+                openWelcomeModal();
+            } else {
+                document.getElementById('welcomeModal').style.display = 'none';
+            }
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/theme_lang.js') }}"></script>
+</body>
+</html>

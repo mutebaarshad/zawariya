@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delicate Fine Jewelry | ZAWARIA Luxury Couture</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .jewelry-header {
+            padding: 50px 6% 30px 6%;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+            position: relative;
+        }
+        .jewelry-header h1 {
+            font-family: var(--font-heading);
+            font-size: 40px;
+            color: var(--primary-deep-purple);
+            letter-spacing: 2px;
+        }
+        .jewelry-header p {
+            color: var(--text-muted);
+            font-size: 15px;
+            max-width: 650px;
+            margin: 10px auto 25px auto;
+            line-height: 1.7;
+        }
+        .add-jewelry-banner-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #D4AF37 0%, #AA771C 100%);
+            color: #1A0328;
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .add-jewelry-banner-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.5);
+            color: #000;
+        }
+        .jewelry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 30px 6% 70px 6%;
+        }
+        .jewelry-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .jewelry-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(39, 7, 59, 0.15);
+            border-color: var(--primary-gold);
+        }
+        .jewelry-card-img-wrap {
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+            position: relative;
+            background: #FDFBF7;
+        }
+        .jewelry-card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .jewelry-card:hover .jewelry-card-img-wrap img {
+            transform: scale(1.08);
+        }
+        .jewelry-card-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .jewelry-title {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-purple);
+            margin-bottom: 6px;
+        }
+        .jewelry-price {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--emerald-green);
+            margin-bottom: 12px;
+        }
+        .empty-jewelry-box {
+            background: white;
+            border-radius: 16px;
+            border: 2px dashed var(--border-light);
+            padding: 60px 30px;
+            text-align: center;
+            max-width: 650px;
+            margin: 20px auto 60px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="top-bar">
+        <span>🌸✨ Assalam-o-Alaikum & Welcome to ZAWARIA ✨🌸</span>
+        <span>🚚 Delivery All Over Pakistan | 💳 50% Advance + Remaining Before Dispatch</span>
+    </div>
+
+    <!-- MAIN NAVBAR WITH PREMIUM LOGO -->
+    <nav>
+        <a href="/" class="brand-logo-link">
+            <img src="{{ url_for('static', filename='images/zawariya_logo.svg') }}" alt="ZAWARIA Luxury Logo" style="height: 52px; width: auto; filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="/" data-i18n="nav_home">Home</a></li>
+            <li><a href="/collections" data-i18n="nav_collections">Collections</a></li>
+            <li><a href="/jewelry" class="active" data-i18n="nav_jewelry">Jewelry</a></li>
+            <li><a href="/contact" data-i18n="nav_contact">Contact Us</a></li>
+            {% if session.get('user_id') or session.get('user_name') %}
+                <li><a href="/my-account" data-i18n="nav_account"><i class="fa-solid fa-user"></i> My Account</a></li>
+            {% else %}
+                <li><a href="/client-login" data-i18n="nav_login">Client Login</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="nav-actions">
+            <button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+                <i class="fa-solid fa-moon"></i> <span>Dark</span>
+            </button>
+            <button onclick="toggleLanguage()" class="lang-toggle-btn" id="langToggleBtn" title="Switch Language (English / اردو)">
+                <i class="fa-solid fa-globe"></i> <span>اردو</span>
+            </button>
+            <a href="/cart" class="cart-icon-btn" title="Shopping Cart">
+                <i class="fa-solid fa-bag-shopping"></i>
+            </a>
+            {% if session.get('admin') %}
+                <a href="/admin" class="nav-btn nav-btn-outline" data-i18n="nav_admin"><i class="fa-solid fa-lock"></i> Admin Dashboard</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="padding: 20px 6% 0 6%;">
+        {% for category, message in messages %}
+          <div style="padding: 14px 22px; border-radius: 8px; font-size: 14px; background: #D4EDDA; color: #155724; font-weight: 600; border: 1px solid #C3E6CB;">
+            <i class="fa-solid fa-circle-check"></i> {{ message }}
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- HEADER SECTION -->
+    <div class="jewelry-header">
+        <div style="display: inline-block; padding: 6px 16px; background: rgba(212, 175, 55, 0.15); border: 1px solid var(--primary-gold); border-radius: 20px; color: #8C6A28; font-size: 12px; font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">
+            💎 FINE JEWELRY &amp; ACCESSORIES
+        </div>
+        <h1>Delicate Jewelry Collection</h1>
+        <p>Handcrafted Kundan, Pearl, and Gold-plated statement pieces designed to complete your ZAWARIA ensemble.</p>
+    </div>
+
+    <!-- DYNAMIC JEWELRY GRID -->
+    {% if products and products|length > 0 %}
+        <div class="jewelry-grid">
+            {% for item in products %}
+                <div class="jewelry-card">
+                    <div class="jewelry-card-img-wrap">
+                        <img src="{{ url_for('static', filename='images/' + item['image']) }}" alt="{{ item['name'] }}">
+                        <span style="position: absolute; top: 12px; left: 12px; background: var(--primary-purple); color: var(--primary-gold); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px;">
+                            Jewelry
+                        </span>
+                    </div>
+                    <div class="jewelry-card-body">
+                        <div>
+                            <h3 class="jewelry-title">{{ item['name'] }}</h3>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                {{ item['description'] }}
+                            </p>
+                        </div>
+                        <div>
+                            <div class="jewelry-price">Rs. {{ "{:,.0f}".format(item['price']) }}</div>
+                            <div style="display: flex; gap: 8px;">
+                                <a href="/product/{{ item['id'] }}" class="btn-card-secondary" style="flex: 1; text-align: center; padding: 8px 12px; font-size: 13px;">View Details</a>
+                                {% if session.get('admin') %}
+                                    <button onclick="addToCartDirect({{ item['id'] }}, '{{ item['name'] }}', {{ item['price'] }}, '{{ item['image'] }}')" class="btn-card-primary" style="flex: 1; text-align: center; padding: 8px 12px; font-size: 13px;">
+                                        <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- EMPTY STATE BOX -->
+        <div class="empty-jewelry-box">
+            <div style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 1px stroke var(--primary-gold);">
+                <i class="fa-solid fa-gem" style="font-size: 36px; color: var(--primary-gold);"></i>
+            </div>
+            <h3 style="font-family: var(--font-heading); font-size: 24px; color: var(--primary-purple); margin-bottom: 10px;">New Jewelry Dropping Soon</h3>
+            <p style="color: var(--text-muted); font-size: 14px; max-width: 500px; margin: 0 auto 15px auto; line-height: 1.6;">
+                Our latest artisanal Kundan and Pearl collections are currently being curated. Check back soon or contact us for custom orders.
+            </p>
+            <a href="https://wa.me/923040530538" target="_blank" class="btn-gold" style="display: inline-flex; align-items: center; gap: 8px;">
+                <i class="fa-brands fa-whatsapp"></i> Inquire Custom Jewelry
+            </a>
+        </div>
+    {% endif %}
+
+    <script>
+        function addToCartDirect(id, name, price, image) {
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            let existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ id: id, name: name, price: price, image: image, qty: 1, size: 'One Size' });
+            }
+            localStorage.setItem('zawaria_cart', JSON.stringify(cart));
+            alert(`"${name}" has been added to your shopping cart!`);
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/theme_lang.js') }}"></script>
+</body>
+</html>

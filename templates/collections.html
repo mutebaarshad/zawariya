@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collections | ZAWARIA Luxury Couture</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="top-bar">
+        <span>🌸✨ Assalam-o-Alaikum & Welcome to ZAWARIA ✨🌸</span>
+        <span>🚚 Delivery All Over Pakistan | 💳 50% Advance + Remaining Before Dispatch</span>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <nav>
+        <a href="/" class="brand-logo-link">
+            <img src="{{ url_for('static', filename='images/zawariya_logo.svg') }}" alt="ZAWARIA Luxury Logo" class="brand-logo-img">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/collections" class="active">Collections</a></li>
+            <li><a href="/jewelry">Jewelry</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            {% if session.get('user_id') or session.get('user_name') %}
+                <li><a href="/my-account"><i class="fa-solid fa-user"></i> My Account</a></li>
+            {% else %}
+                <li><a href="/client-login">Client Login</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="nav-actions">
+            <button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+                <i class="fa-solid fa-moon"></i> <span>Dark</span>
+            </button>
+            <button onclick="toggleLanguage()" class="lang-toggle-btn" id="langToggleBtn" title="Switch Language (English / اردو)">
+                <i class="fa-solid fa-globe"></i> <span>اردو</span>
+            </button>
+            <a href="/cart" class="cart-icon-btn">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+            {% if session.get('admin') %}
+                <a href="/admin" class="nav-btn nav-btn-outline"><i class="fa-solid fa-lock"></i> Admin Dashboard</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- HEADER BANNER -->
+    <div style="background: linear-gradient(rgba(10,36,30,0.85), rgba(10,36,30,0.85)), url('/static/images/rang_e_jan_1.jpeg') center/cover; padding: 70px 6%; text-align: center; color: white;">
+        <h1 style="font-family: var(--font-heading); font-size: 42px; color: var(--primary-gold);">ZAWARIA Luxury Catalogue</h1>
+        <p style="color: #D1DADB; margin-top: 8px;">Explore our signature stitched collection. 50% advance payment required to confirm orders.</p>
+    </div>
+
+    <!-- CATALOG GRID -->
+    <section class="catalog-container" style="padding-top: 50px;">
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <div class="product-image-wrap">
+                    <span class="advance-badge">50% Advance</span>
+                    <img src="{{ url_for('static', filename='images/' + product['image']) }}" 
+                         id="prod-col-img-{{ product['id'] }}" 
+                         class="product-img" 
+                         alt="{{ product['name'] }}">
+
+                    <div class="angle-thumbs">
+                        <img src="{{ url_for('static', filename='images/' + product['image']) }}" 
+                             class="angle-dot active" 
+                             data-target="prod-col-img-{{ product['id'] }}"
+                             data-src="{{ url_for('static', filename='images/' + product['image']) }}"
+                             onclick="switchAngleBtn(this)">
+                        {% if product['image_side'] %}
+                        <img src="{{ url_for('static', filename='images/' + product['image_side']) }}" 
+                             class="angle-dot" 
+                             data-target="prod-col-img-{{ product['id'] }}"
+                             data-src="{{ url_for('static', filename='images/' + product['image_side']) }}"
+                             onclick="switchAngleBtn(this)">
+                        {% endif %}
+                        {% if product['image_back'] %}
+                        <img src="{{ url_for('static', filename='images/' + product['image_back']) }}" 
+                             class="angle-dot" 
+                             data-target="prod-col-img-{{ product['id'] }}"
+                             data-src="{{ url_for('static', filename='images/' + product['image_back']) }}"
+                             onclick="switchAngleBtn(this)">
+                        {% endif %}
+                        {% if product['image_detail'] %}
+                        <img src="{{ url_for('static', filename='images/' + product['image_detail']) }}" 
+                             class="angle-dot" 
+                             data-target="prod-col-img-{{ product['id'] }}"
+                             data-src="{{ url_for('static', filename='images/' + product['image_detail']) }}"
+                             onclick="switchAngleBtn(this)">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <span class="product-category">{{ product['category'] }}</span>
+                    <h3 class="product-title">{{ product['name'] }}</h3>
+                    
+                    <div class="product-price-row">
+                        <span class="price-main">Rs. {{ "{:,.0f}".format(product['price']) }}</span>
+                        <span class="price-advance">Advance: Rs. {{ "{:,.0f}".format(product['price'] * 0.5) }}</span>
+                    </div>
+
+                    <div class="product-actions">
+                        <a href="/product/{{ product['id'] }}" class="btn-card-secondary">View Angles</a>
+                        <button data-id="{{ product['id'] }}" 
+                                data-name="{{ product['name'] }}" 
+                                data-price="{{ product['price'] }}" 
+                                data-image="{{ product['image'] }}" 
+                                onclick="handleAddToCartBtn(this)" 
+                                class="btn-card-primary">
+                                <i class="fa-solid fa-bag-shopping"></i> Add To Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ADD TO CART NOTIFICATION TOAST / MODAL -->
+    <div class="modal-overlay" id="cartToastModal">
+        <div class="modal-card" style="max-width: 440px; text-align: center;">
+            <span class="modal-close" onclick="closeCartToast()">&times;</span>
+            <div style="font-size: 40px; color: var(--primary-gold); margin-bottom: 10px;"><i class="fa-solid fa-circle-check"></i></div>
+            <h3 style="font-family: var(--font-heading); color: var(--primary-dark);">Added to Cart!</h3>
+            <p id="toastProductName" style="font-weight: 700; font-size: 16px; margin: 8px 0; color: var(--primary-dark);"></p>
+            <p id="toastAdvancePrice" style="color: #8C6A28; background: #FFF9EC; padding: 8px; border-radius: 6px; font-size: 13px; font-weight: 600; margin-bottom: 20px;"></p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button onclick="closeCartToast()" class="btn-card-secondary">Continue Shopping</button>
+                <a href="/cart" class="btn-gold" style="display: inline-block; text-align: center; padding: 10px;">Go to Cart</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING WHATSAPP -->
+    <a href="https://wa.me/923040530538" target="_blank" class="floating-whatsapp" title="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <p style="font-family: var(--font-heading); color: var(--primary-gold); font-size: 18px; margin-bottom: 12px; letter-spacing: 2px;">Connect with ZAWARIA</p>
+            <div style="display: flex; justify-content: center; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <a href="https://www.instagram.com/zawar_iaa?stkn=MWs2cjUwN3djYm91dA==" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; color: #fff; background: rgba(255,255,255,0.08); border: 1px solid var(--border-light); padding: 8px 18px; border-radius: 25px; font-size: 13px; text-decoration: none;">
+                    <i class="fa-brands fa-instagram" style="font-size: 16px; color: #E1306C;"></i> Instagram
+                </a>
+                <a href="https://www.tiktok.com/@zawar_ia?_r=1&_t=ZS-99jKQJmPCd7" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; color: #fff; background: rgba(255,255,255,0.08); border: 1px solid var(--border-light); padding: 8px 18px; border-radius: 25px; font-size: 13px; text-decoration: none;">
+                    <i class="fa-brands fa-tiktok" style="font-size: 16px;"></i> TikTok
+                </a>
+                <a href="https://wa.me/923040530538" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; color: #fff; background: rgba(255,255,255,0.08); border: 1px solid var(--border-light); padding: 8px 18px; border-radius: 25px; font-size: 13px; text-decoration: none;">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 16px; color: #25D366;"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 ZAWARIA Luxury Fashion. All Rights Reserved. | 📞 0304-0530538</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchAngle(imgId, newSrc, dotElem) {
+            document.getElementById(imgId).src = newSrc;
+            let dots = dotElem.parentElement.getElementsByClassName('angle-dot');
+            for (let d of dots) d.classList.remove('active');
+            dotElem.classList.add('active');
+        }
+
+        function switchAngleBtn(dotElem) {
+            let imgId = dotElem.getAttribute('data-target');
+            let newSrc = dotElem.getAttribute('data-src');
+            switchAngle(imgId, newSrc, dotElem);
+        }
+
+        function closeCartToast() { document.getElementById('cartToastModal').style.display = 'none'; }
+
+        function updateCartBadge() {
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cartCount').innerText = totalItems;
+        }
+
+        function handleAddToCartBtn(btn) {
+            let id = parseInt(btn.getAttribute('data-id'));
+            let name = btn.getAttribute('data-name');
+            let price = parseFloat(btn.getAttribute('data-price'));
+            let image = btn.getAttribute('data-image');
+
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            let existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ id: id, name: name, price: price, image: image, size: 'M', qty: 1 });
+            }
+            localStorage.setItem('zawaria_cart', JSON.stringify(cart));
+            updateCartBadge();
+
+            document.getElementById('toastProductName').innerText = name;
+            document.getElementById('toastAdvancePrice').innerText = "50% Advance Due at Checkout: Rs. " + (price * 0.5).toLocaleString();
+            document.getElementById('cartToastModal').style.display = 'flex';
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartBadge);
+    </script>
+    <script src="{{ url_for('static', filename='js/theme_lang.js') }}"></script>
+</body>
+</html>

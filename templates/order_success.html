@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Order Confirmed | ZAWARIA</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .success-section {
+
+            min-height: 80vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 60px 20px;
+
+        }
+
+        .success-card {
+
+            max-width: 750px;
+
+            width: 100%;
+
+            background: white;
+
+            padding: 50px;
+
+            border-radius: 25px;
+
+            text-align: center;
+
+            box-shadow:
+                0 15px 40px
+                rgba(106,63,160,.15);
+
+            border: 2px solid #EEE6FA;
+
+        }
+
+        .success-icon {
+
+            font-size: 70px;
+
+            margin-bottom: 20px;
+
+        }
+
+        .success-card h1 {
+
+            color: #6A3FA0;
+
+            font-size: 42px;
+
+            margin-bottom: 20px;
+
+        }
+
+        .success-card p {
+
+            color: #555;
+
+            font-size: 18px;
+
+            line-height: 1.7;
+
+        }
+
+        .order-number {
+
+            background: #F8F3FF;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            margin: 25px 0;
+
+            color: #6A3FA0;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+        }
+
+        .payment-box {
+
+            background: #FFF4F8;
+
+            border: 2px solid #F3D5E0;
+
+            border-radius: 15px;
+
+            padding: 25px;
+
+            margin: 25px 0;
+
+            text-align: left;
+
+        }
+
+        .payment-box h3 {
+
+            color: #6A3FA0;
+
+            margin-bottom: 15px;
+
+        }
+
+        .advance {
+
+            color: #E75480;
+
+            font-size: 25px;
+
+            font-weight: bold;
+
+        }
+
+        .success-buttons {
+
+            display: flex;
+
+            gap: 15px;
+
+            justify-content: center;
+
+            margin-top: 30px;
+
+            flex-wrap: wrap;
+
+        }
+
+        .success-buttons a {
+
+            text-decoration: none;
+
+        }
+
+        .success-buttons button {
+
+            padding: 14px 30px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #6A3FA0;
+
+            color: white;
+
+            font-size: 17px;
+
+            cursor: pointer;
+
+        }
+
+        .success-buttons button:hover {
+
+            background: #E75480;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        ZAWARIA
+    </div>
+
+    <div class="nav-right">
+
+        <ul>
+
+            <li>
+                <a href="/">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="/cart">
+                    Cart
+                </a>
+            </li>
+
+            <li>
+                <a href="/terms">
+                    Terms
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================= SUCCESS ================= -->
+
+<section class="success-section">
+
+    <div class="success-card">
+
+
+        <!-- SUCCESS ICON -->
+
+        <div class="success-icon">
+            🎉
+        </div>
+
+
+        <h1>
+            Order Received!
+        </h1>
+
+
+        <p>
+            Thank you for shopping with
+            <strong>ZAWARIA</strong>.
+        </p>
+
+
+        <p>
+            Your order has been successfully
+            received and is now pending
+            payment verification.
+        </p>
+
+
+
+        <!-- ================= ORDER NUMBER ================= -->
+
+        <div class="order-number">
+
+            🛍 Order #{{ order.id }}
+
+        </div>
+
+
+
+        <!-- ================= CUSTOMER ================= -->
+
+        <p>
+
+            <strong>
+                Customer:
+            </strong>
+
+            {{ order.customer_name }}
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                Payment Method:
+            </strong>
+
+            {{ order.payment_method }}
+
+        </p>
+
+
+
+        <!-- ================= PAYMENT ================= -->
+
+        <div class="payment-box">
+
+            <h3>
+                💳 Payment Information
+            </h3>
+
+
+            <p>
+
+                Total Order Amount:
+
+                <strong>
+                    Rs.
+                    {{ "{:,.0f}".format(order.total) }}
+                </strong>
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Mandatory 50% Advance:
+                </strong>
+
+            </p>
+
+
+            <p class="advance">
+
+                Rs.
+                {{ "{:,.0f}".format(order.advance) }}
+
+            </p>
+
+
+            <p>
+
+                Remaining 50%:
+
+                <strong>
+                    Rs.
+                    {{ "{:,.0f}".format(order.remaining) }}
+                </strong>
+
+            </p>
+
+        </div>
+
+
+
+        <!-- ================= STATUS ================= -->
+
+        <div class="payment-box">
+
+            <h3>
+                📋 Order Status
+            </h3>
+
+            <p>
+
+                ⏳
+                <strong>
+                    {{ order.status }}
+                </strong>
+
+            </p>
+
+            <p>
+
+                Your order will be confirmed
+                after verification of your
+                50% advance payment.
+
+            </p>
+
+        </div>
+
+
+
+        <!-- ================= DELIVERY ================= -->
+
+        <div class="payment-box">
+
+            <h3>
+                🚚 Delivery Information
+            </h3>
+
+            <p>
+
+                Delivery is available
+                all over Pakistan.
+
+            </p>
+
+            <p>
+
+                Estimated Delivery Time:
+
+                <strong>
+                    25–28 Working Days
+                </strong>
+
+            </p>
+
+        </div>
+
+
+
+        <!-- ================= BUTTONS ================= -->
+
+        <div class="success-buttons">
+
+            <a href="/">
+
+                <button>
+                    🏠 Continue Shopping
+                </button>
+
+            </a>
+
+
+            <a href="/cart">
+
+                <button>
+                    🛒 View Cart
+                </button>
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h2>
+        ZAWARIA
+    </h2>
+
+    <p>
+        Elegance • Fashion • Confidence
+    </p>
+
+    <p>
+        50% Advance Payment •
+        All Pakistan Delivery
+    </p>
+
+    <p>
+        © 2026 ZAWARIA. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

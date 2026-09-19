@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product['name'] }} | ZAWARIA Luxury Fashion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- FLOATING ANIMATED BACKGROUND FLOWERS -->
+    <div class="floating-flower-bg">
+        <span class="flower-petal fp-1">🌸</span>
+        <span class="flower-petal fp-2">🌺</span>
+        <span class="flower-petal fp-3">🌷</span>
+        <span class="flower-petal fp-4">🌸</span>
+        <span class="flower-petal fp-5">💐</span>
+    </div>
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="top-bar">
+        <span>🌸✨ Assalam-o-Alaikum & Welcome to ZAWARIA ✨🌸</span>
+        <span>🚚 Delivery All Over Pakistan (Rs. 350) | 💳 50% Advance + Remaining Before Dispatch</span>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <nav>
+        <a href="/" class="brand-logo-link">
+            <img src="{{ url_for('static', filename='images/zawariya_logo.svg') }}" alt="ZAWARIA Luxury Logo" class="brand-logo-img">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/collections" class="active">Collections</a></li>
+            <li><a href="/jewelry">Jewelry</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            {% if session.get('user_id') or session.get('user_name') %}
+                <li><a href="/my-account"><i class="fa-solid fa-user"></i> My Account</a></li>
+            {% else %}
+                <li><a href="/client-login">Client Login</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="nav-actions">
+            <a href="/cart" class="cart-icon-btn">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+            <a href="/admin" class="nav-btn nav-btn-outline"><i class="fa-solid fa-lock"></i> Admin</a>
+        </div>
+    </nav>
+
+    <!-- HIDDEN PRODUCT DATA CONTAINER FOR LINTER COMPATIBILITY -->
+    <div id="productData" 
+         data-id="{{ product['id'] }}" 
+         data-name="{{ product['name'] }}" 
+         data-price="{{ product['price'] }}" 
+         data-image="{{ product['image'] }}" 
+         style="display: none;"></div>
+
+    <!-- PRODUCT MULTI-ANGLE SHOWCASE LAYOUT -->
+    <section class="product-detail-layout">
+        <!-- Gallery with 4 Angles -->
+        <div class="product-gallery-section">
+            <div class="main-view-container">
+                <img src="{{ url_for('static', filename='images/' + product['image']) }}" id="mainProductView" class="main-view-img" alt="{{ product['name'] }}">
+            </div>
+
+            <div class="gallery-angles-bar">
+                <div class="angle-btn active" data-img="{{ url_for('static', filename='images/' + product['image']) }}" onclick="handleAngleBtnClick(this)">
+                    <img src="{{ url_for('static', filename='images/' + product['image']) }}" alt="Front">
+                    <span>Front View</span>
+                </div>
+
+                {% if product['image_side'] %}
+                <div class="angle-btn" data-img="{{ url_for('static', filename='images/' + product['image_side']) }}" onclick="handleAngleBtnClick(this)">
+                    <img src="{{ url_for('static', filename='images/' + product['image_side']) }}" alt="Side Profile">
+                    <span>Side Profile</span>
+                </div>
+                {% endif %}
+
+                {% if product['image_back'] %}
+                <div class="angle-btn" data-img="{{ url_for('static', filename='images/' + product['image_back']) }}" onclick="handleAngleBtnClick(this)">
+                    <img src="{{ url_for('static', filename='images/' + product['image_back']) }}" alt="Back View">
+                    <span>Back View</span>
+                </div>
+                {% endif %}
+
+                {% if product['image_detail'] %}
+                <div class="angle-btn" data-img="{{ url_for('static', filename='images/' + product['image_detail']) }}" onclick="handleAngleBtnClick(this)">
+                    <img src="{{ url_for('static', filename='images/' + product['image_detail']) }}" alt="Detail Close-up">
+                    <span>Fabric Detail</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Specifications & Purchase -->
+        <div class="product-spec-info">
+            <span class="spec-category">{{ product['category'] }}</span>
+            <h2>{{ product['name'] }}</h2>
+
+            <div class="spec-price-box">
+                <div class="spec-total">Rs. {{ "{:,.0f}".format(product['price']) }}</div>
+                <div class="spec-breakdown">
+                    <div class="part advance-part"><i class="fa-solid fa-circle-check"></i> 50% Advance Due Now: <strong>Rs. {{ "{:,.0f}".format(product['price'] * 0.5) }}</strong></div>
+                    <div class="part cod-part"><i class="fa-solid fa-truck-ramp-box"></i> 50% COD at Delivery: <strong>Rs. {{ "{:,.0f}".format(product['price'] * 0.5) }}</strong></div>
+                </div>
+            </div>
+
+            <p style="white-space: pre-line; color: var(--text-muted); font-size: 14.5px; margin-bottom: 25px;">{{ product['description'] }}</p>
+
+            <!-- Size Selector -->
+            <div class="size-selector-wrap">
+                <div class="size-header">
+                    <label>Select Size:</label>
+                    <span class="size-chart-link" onclick="openSizeModal()"><i class="fa-solid fa-ruler-horizontal"></i> View Size Chart</span>
+                </div>
+                <div class="size-options">
+                    <button class="size-btn" onclick="selectSize('S', this)">S</button>
+                    <button class="size-btn active" onclick="selectSize('M', this)">M</button>
+                    <button class="size-btn" onclick="selectSize('L', this)">L</button>
+                    <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
+                    <button class="size-btn" onclick="selectSize('Custom', this)">Custom Made-to-Measure</button>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Custom Stitching / Alteration Notes (Optional):</label>
+                <input type="text" id="customNotes" class="form-control" placeholder="e.g. Add attached cancan (+1500), length 54 inches">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px;">
+                <button onclick="addCurrentToCart()" class="btn-gold" style="width: 100%; text-align: center;"><i class="fa-solid fa-bag-shopping"></i> Add To Cart</button>
+                <button onclick="buyNow()" class="btn-card-primary" style="padding: 14px; font-size: 14px;"><i class="fa-solid fa-bolt"></i> Order Now (50% Advance)</button>
+            </div>
+
+            <div style="margin-top: 30px; padding: 15px; background: var(--bg-silk); border-radius: 8px; border: 1px solid var(--border-light); font-size: 13px;">
+                <p><strong><i class="fa-solid fa-shield-halved" style="color: var(--primary-gold);"></i> ZAWARIA Promise:</strong> 100% authentic premium fabric, hand embellished with luxury craftsmanship. Delivery in 25-28 working days across Pakistan.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SIZE CHART MODAL -->
+    <div class="modal-overlay" id="sizeModal">
+        <div class="modal-card">
+            <span class="modal-close" onclick="closeSizeModal()">&times;</span>
+            <h3 style="font-family: var(--font-heading); color: var(--primary-purple); margin-bottom: 15px;">ZAWARIA Standard Size Guide</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Size</th>
+                        <th>Chest</th>
+                        <th>Waist</th>
+                        <th>Hip</th>
+                        <th>Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Small (S)</strong></td><td>34"</td><td>28"</td><td>36"</td><td>52"</td></tr>
+                    <tr><td><strong>Medium (M)</strong></td><td>36"</td><td>30"</td><td>38"</td><td>53"</td></tr>
+                    <tr><td><strong>Large (L)</strong></td><td>38"</td><td>32"</td><td>40"</td><td>54"</td></tr>
+                    <tr><td><strong>XL</strong></td><td>40"</td><td>34"</td><td>42"</td><td>55"</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let selectedSize = 'M';
+
+        function handleAngleBtnClick(btnElem) {
+            let src = btnElem.getAttribute('data-img');
+            document.getElementById('mainProductView').src = src;
+            let btns = document.getElementsByClassName('angle-btn');
+            for (let b of btns) b.classList.remove('active');
+            btnElem.classList.add('active');
+        }
+
+        function selectSize(size, elem) {
+            selectedSize = size;
+            let btns = document.getElementsByClassName('size-btn');
+            for (let b of btns) b.classList.remove('active');
+            elem.classList.add('active');
+        }
+
+        function openSizeModal() { document.getElementById('sizeModal').style.display = 'flex'; }
+        function closeSizeModal() { document.getElementById('sizeModal').style.display = 'none'; }
+
+        function addCurrentToCart() {
+            let pData = document.getElementById('productData');
+            let pId = parseInt(pData.getAttribute('data-id'));
+            let pName = pData.getAttribute('data-name');
+            let pPrice = parseFloat(pData.getAttribute('data-price'));
+            let pImage = pData.getAttribute('data-image');
+            let notes = document.getElementById('customNotes').value;
+
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            cart.push({
+                id: pId,
+                name: pName,
+                price: pPrice,
+                image: pImage,
+                size: selectedSize,
+                customization: notes,
+                qty: 1
+            });
+            localStorage.setItem('zawaria_cart', JSON.stringify(cart));
+            alert("Added to cart! Proceed to checkout to verify your 50% advance payment.");
+            window.location.href = "/cart";
+        }
+
+        function buyNow() {
+            addCurrentToCart();
+            window.location.href = "/checkout";
+        }
+
+        function updateCartBadge() {
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
+        }
+        document.addEventListener('DOMContentLoaded', updateCartBadge);
+    </script>
+</body>
+</html>

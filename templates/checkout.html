@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout & Payment | ZAWARIA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- FLOATING ANIMATED BACKGROUND FLOWERS -->
+    <div class="floating-flower-bg">
+        <span class="flower-petal fp-1">🌸</span>
+        <span class="flower-petal fp-2">🌺</span>
+        <span class="flower-petal fp-3">🌷</span>
+        <span class="flower-petal fp-4">🌸</span>
+        <span class="flower-petal fp-5">💐</span>
+    </div>
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="top-bar">
+        <span>🌸✨ Assalam-o-Alaikum & Welcome to ZAWARIA ✨🌸</span>
+        <span>🚚 Delivery All Over Pakistan (Rs. 350) | 💳 50% Advance + Remaining Before Dispatch</span>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <nav>
+        <a href="/" class="brand-logo-link">
+            <img src="{{ url_for('static', filename='images/zawariya_logo.svg') }}" alt="ZAWARIA Luxury Logo" class="brand-logo-img">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/collections">Collections</a></li>
+            <li><a href="/jewelry">Jewelry</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            {% if session.get('user_id') or session.get('user_name') %}
+                <li><a href="/my-account"><i class="fa-solid fa-user"></i> My Account</a></li>
+            {% else %}
+                <li><a href="/client-login">Client Login</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="nav-actions">
+            <button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+                <i class="fa-solid fa-moon"></i> <span>Dark</span>
+            </button>
+            <button onclick="toggleLanguage()" class="lang-toggle-btn" id="langToggleBtn" title="Switch Language (English / اردو)">
+                <i class="fa-solid fa-globe"></i> <span>اردو</span>
+            </button>
+            <a href="/cart" class="cart-icon-btn">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+            {% if session.get('admin') %}
+                <a href="/admin" class="nav-btn nav-btn-outline"><i class="fa-solid fa-lock"></i> Admin Dashboard</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- CHECKOUT CONTAINER -->
+    <div class="checkout-container">
+        <!-- Customer Details & Upload Form -->
+        <form id="checkoutForm" class="checkout-card" enctype="multipart/form-data">
+            <h3>Customer & Shipping Information</h3>
+
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" name="customer_name" class="form-control" required placeholder="e.g. Ayesha Khan" value="{{ session.get('user_name', '') }}">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>WhatsApp / Phone Number *</label>
+                    <input type="tel" name="phone" class="form-control" required placeholder="03XX-XXXXXXX" value="{{ session.get('user_phone', '') }}">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" class="form-control" placeholder="ayesha@example.com" value="{{ session.get('user_email', '') }}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>City *</label>
+                    <input type="text" name="city" class="form-control" required placeholder="e.g. Lahore, Karachi, Islamabad">
+                </div>
+                <div class="form-group">
+                    <label>Postal Code</label>
+                    <input type="text" name="postal_code" class="form-control" placeholder="e.g. 54000">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Complete Shipping Address *</label>
+                <textarea name="address" class="form-control" rows="3" required placeholder="House #, Street #, Sector, Area"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Standard Size *</label>
+                    <select name="size" class="form-control" required>
+                        <option value="S">Small (S) - Chest 34"</option>
+                        <option value="M" selected>Medium (M) - Chest 36"</option>
+                        <option value="L">Large (L) - Chest 38"</option>
+                        <option value="XL">XL - Chest 40"</option>
+                        <option value="Custom">Custom Made-to-Measure</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Custom Stitching / Add-on Notes</label>
+                    <input type="text" name="customization" class="form-control" placeholder="e.g. Attached Cancan (+1500), sleeves length 22 inches">
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px;">50% Advance Payment Method</h3>
+
+            <div class="bank-info-box">
+                <h4><i class="fa-solid fa-building-columns"></i> ZAWARIA Official Payment Details</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Please transfer <strong>50% Advance Payment</strong> to any of the accounts below to confirm your order.</p>
+
+                <div class="bank-detail-item"><span>JazzCash / EasyPaisa:</span> <strong>0304-0530538 (Mariam Hanif)</strong></div>
+                <div class="bank-detail-item"><span>Meezan Bank Account Title:</span> <strong>ZAWARIA LUXURY COUTURE</strong></div>
+                <div class="bank-detail-item"><span>Meezan Account Number:</span> <strong>0102-0105829102</strong></div>
+                <div class="bank-detail-item"><span>Meezan IBAN:</span> <strong>PK36MEZN0001020105829102</strong></div>
+            </div>
+
+            <div class="form-group">
+                <label>Payment Method Used *</label>
+                <select name="payment_method" class="form-control" required>
+                    <option value="JazzCash">JazzCash (0304-0530538)</option>
+                    <option value="EasyPaisa">EasyPaisa (0304-0530538)</option>
+                    <option value="Bank Transfer">Bank Transfer (Meezan Bank)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Transaction Reference / TRX ID</label>
+                <input type="text" name="transaction_id" class="form-control" placeholder="e.g. TRX192837465">
+            </div>
+
+            <div class="form-group">
+                <label>Upload 50% Advance Payment Screenshot / Receipt *</label>
+                <input type="file" name="payment_screenshot" accept="image/*" class="form-control" required style="padding: 8px;">
+            </div>
+
+            <input type="hidden" name="total" id="hiddenTotal" value="0">
+            <input type="hidden" name="product_details" id="hiddenDetails" value="">
+
+            <button type="submit" id="submitBtn" class="btn-gold" style="width: 100%; text-align: center; margin-top: 15px; font-size: 16px;">
+                <i class="fa-solid fa-paper-plane"></i> Submit Order & Confirm 50% Advance
+            </button>
+        </form>
+
+        <!-- Order Summary Column -->
+        <div class="checkout-card" style="height: fit-content;">
+            <h3>Your Order</h3>
+            <div id="checkoutSummaryItems" style="margin-bottom: 20px;"></div>
+
+            <div style="background: var(--soft-pink); padding: 18px; border-radius: 8px; border: 1px solid var(--border-light);">
+                <div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                    <span>Items Subtotal:</span>
+                    <strong id="summaryItemsSubtotal">Rs. 0</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 6px 0; color: var(--accent-pink);">
+                    <span><i class="fa-solid fa-truck"></i> Flat Delivery Fee:</span>
+                    <strong>Rs. 350</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 15px; color: var(--primary-purple); border-top: 1px dashed var(--border-light); margin-top: 6px;">
+                    <span>Total Order Bill:</span>
+                    <strong id="summaryGrandTotal">Rs. 0</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; color: #8C6A28; font-weight: 800; font-size: 16px; border-top: 1px dashed var(--primary-gold); margin-top: 8px;">
+                    <span>50% Advance Due Now:</span>
+                    <strong id="summaryAdvance">Rs. 0</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 6px 0; color: #123B32; font-size: 13px;">
+                    <span>50% Remaining at Delivery:</span>
+                    <strong id="summaryRemaining">Rs. 0</strong>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; font-size: 12px; color: var(--text-muted); line-height: 1.6;">
+                <p>⚠️ <strong>Important Policy:</strong> Your order will enter custom stitching immediately upon 50% advance payment receipt verification by our admin team (25-28 working days delivery).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-bottom">
+            <p>© 2026 ZAWARIA Luxury Fashion. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const DELIVERY_FEE = 350;
+
+        function loadCheckout() {
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                window.location.href = "/collections";
+                return;
+            }
+
+            let itemsSubtotal = 0;
+            let summaryHtml = '';
+            let itemSummaries = [];
+
+            cart.forEach(item => {
+                let sub = item.price * item.qty;
+                itemsSubtotal += sub;
+                itemSummaries.push(`${item.name} (${item.size}) x${item.qty}`);
+                summaryHtml += `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13.5px;">
+                        <span><strong>${item.name}</strong> (${item.size}) x${item.qty}</span>
+                        <strong>Rs. ${sub.toLocaleString()}</strong>
+                    </div>
+                `;
+            });
+
+            let grandTotal = itemsSubtotal + DELIVERY_FEE;
+            let advance = grandTotal * 0.50;
+            let remaining = grandTotal * 0.50;
+
+            document.getElementById('checkoutSummaryItems').innerHTML = summaryHtml;
+            document.getElementById('summaryItemsSubtotal').innerText = `Rs. ${itemsSubtotal.toLocaleString()}`;
+            document.getElementById('summaryGrandTotal').innerText = `Rs. ${grandTotal.toLocaleString()}`;
+            document.getElementById('summaryAdvance').innerText = `Rs. ${advance.toLocaleString()}`;
+            document.getElementById('summaryRemaining').innerText = `Rs. ${remaining.toLocaleString()}`;
+
+            document.getElementById('hiddenTotal').value = grandTotal;
+            document.getElementById('hiddenDetails').value = itemSummaries.join(', ');
+            document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
+        }
+
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            let submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting Order...';
+
+            fetch('/place-order', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.removeItem('zawaria_cart');
+                    window.location.href = "/order-success/" + data.order_id;
+                } else {
+                    alert("Error: " + data.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Order & Confirm 50% Advance';
+                }
+            })
+            .catch(err => {
+                alert("Server error: " + err);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Order & Confirm 50% Advance';
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', loadCheckout);
+    </script>
+</body>
+</html>

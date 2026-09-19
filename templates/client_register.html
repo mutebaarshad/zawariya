@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | ZAWARIA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav>
+        <div class="brand-logo">
+            <h1><a href="/">ZAWARIA</a></h1>
+            <p>Grace in Every Style</p>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/collections">Collections</a></li>
+        </ul>
+    </nav>
+
+    <div style="padding: 60px 6%; max-width: 500px; margin: 0 auto;">
+        <div class="checkout-card">
+            <h3 style="text-align: center; color: var(--primary-dark);">Register Client Account</h3>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 13px; background: #FFF3CD; color: #856404; text-align: center;">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form action="/register" method="POST">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" class="form-control" required placeholder="Ayesha Khan">
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" class="form-control" required placeholder="ayesha@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label>WhatsApp / Phone Number</label>
+                    <input type="tel" name="phone" class="form-control" required placeholder="0304-XXXXXXX">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" required placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="btn-gold" style="width: 100%; margin-top: 10px;">Create Account</button>
+            </form>
+
+            <p style="text-align: center; font-size: 13px; margin-top: 20px; color: var(--text-muted);">
+                Already registered? <a href="/client-login" style="color: var(--primary-gold); font-weight: 700;">Login Here</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

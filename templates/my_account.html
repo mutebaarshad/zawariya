@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders & Account | ZAWARIA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="top-bar">
+        <span>🌸✨ Assalam-o-Alaikum & Welcome to ZAWARIA ✨🌸</span>
+        <span>🚚 Delivery All Over Pakistan | 💳 50% Advance + Remaining Before Dispatch</span>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <nav>
+        <div class="brand-logo">
+            <h1><a href="/">ZAWARIA</a></h1>
+            <p>Grace in Every Style</p>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/collections">Collections</a></li>
+            <li><a href="/my-account" class="active">My Orders</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <span style="font-size: 13px; font-weight: 600; color: var(--primary-dark);">Client: {{ session.get('user_name', 'Valued Customer') }}</span>
+            <a href="/client-logout" class="nav-btn nav-btn-outline"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </nav>
+
+    <!-- CLIENT DASHBOARD -->
+    <div style="padding: 40px 6% 80px 6%; max-width: 1100px; margin: 0 auto;">
+        <h2 style="font-family: var(--font-heading); color: var(--primary-dark); font-size: 32px; margin-bottom: 25px;">My Order History & Status</h2>
+
+        {% if orders %}
+            <div style="display: flex; flex-direction: column; gap: 25px;">
+                {% for order in orders %}
+                <div class="checkout-card" style="border: 1px solid var(--border-light);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 15px; margin-bottom: 15px;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 20px;">Order #{{ order['id'] }}</h3>
+                            <span style="font-size: 12px; color: var(--text-muted);">Placed on: {{ order['created_at'] }}</span>
+                        </div>
+                        <span class="status-badge 
+                            {% if order['status'] == 'Pending Payment Verification' %}status-pending
+                            {% elif order['status'] == 'Advance Approved' %}status-approved
+                            {% elif order['status'] == 'In Tailoring' %}status-tailoring
+                            {% else %}status-dispatched{% endif %}">
+                            {{ order['status'] }}
+                        </span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                        <div>
+                            <p><strong>Items:</strong> {{ order['product_details'] }}</p>
+                            <p style="margin-top: 6px;"><strong>Selected Size:</strong> {{ order['size'] }}</p>
+                            <p style="margin-top: 6px;"><strong>Delivery Address:</strong> {{ order['address'] }}, {{ order['city'] }}</p>
+                            {% if order['customization'] %}
+                            <p style="margin-top: 6px; color: var(--primary-gold);"><strong>Notes:</strong> {{ order['customization'] }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div style="background: var(--bg-silk); padding: 15px; border-radius: 8px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                                <span>Total Price:</span> <strong>Rs. {{ "{:,.0f}".format(order['total']) }}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #8C6A28; margin-top: 4px;">
+                                <span>50% Advance Paid:</span> <strong>Rs. {{ "{:,.0f}".format(order['advance']) }}</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #123B32; margin-top: 4px;">
+                                <span>50% Remaining:</span> <strong>Rs. {{ "{:,.0f}".format(order['remaining']) }}</strong>
+                            </div>
+                            <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted);">
+                                Payment Method: <strong>{{ order['payment_method'] }}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Status Tracker -->
+                    <div style="margin-top: 25px; padding-top: 15px; border-top: 1px dashed var(--border-light);">
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--primary-dark); text-align: center;">
+                            <span style="color: var(--primary-gold);">1. Order Received</span>
+                            <span style="color: {% if order['status'] != 'Pending Payment Verification' %}var(--primary-gold){% else %}#aaa{% endif %};">2. 50% Advance Verified</span>
+                            <span style="color: {% if order['status'] in ['In Tailoring', 'Dispatched', 'Completed'] %}var(--primary-gold){% else %}#aaa{% endif %};">3. Custom Tailoring (25-28 Days)</span>
+                            <span style="color: {% if order['status'] in ['Dispatched', 'Completed'] %}var(--primary-gold){% else %}#aaa{% endif %};">4. Dispatched</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="checkout-card" style="text-align: center; padding: 50px;">
+                <i class="fa-solid fa-box-open" style="font-size: 48px; color: var(--border-light);"></i>
+                <h3 style="margin-top: 15px;">No Orders Found</h3>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">You haven't placed any orders with this account yet.</p>
+                <a href="/collections" class="btn-gold">Browse Luxury Collection</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-bottom">
+            <p>© 2026 ZAWARIA Luxury Fashion. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | ZAWARIA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- FLOATING ANIMATED BACKGROUND FLOWERS -->
+    <div class="floating-flower-bg">
+        <span class="flower-petal fp-1">🌸</span>
+        <span class="flower-petal fp-2">🌺</span>
+        <span class="flower-petal fp-3">🌷</span>
+        <span class="flower-petal fp-4">🌸</span>
+        <span class="flower-petal fp-5">💐</span>
+    </div>
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="top-bar">
+        <span>🌸✨ Assalam-o-Alaikum & Welcome to ZAWARIA ✨🌸</span>
+        <span>🚚 Delivery All Over Pakistan (Rs. 350) | 💳 50% Advance + Remaining Before Dispatch</span>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <nav>
+        <a href="/" class="brand-logo-link">
+            <img src="{{ url_for('static', filename='images/zawariya_logo.svg') }}" alt="ZAWARIA Luxury Logo"
+                class="brand-logo-img">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/collections">Collections</a></li>
+            <li><a href="/jewelry">Jewelry</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            {% if session.get('user_id') or session.get('user_name') %}
+            <li><a href="/my-account"><i class="fa-solid fa-user"></i> My Account</a></li>
+            {% else %}
+            <li><a href="/client-login">Client Login</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="nav-actions">
+            <button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+                <i class="fa-solid fa-moon"></i> <span>Dark</span>
+            </button>
+            <button onclick="toggleLanguage()" class="lang-toggle-btn" id="langToggleBtn" title="Switch Language (English / اردو)">
+                <i class="fa-solid fa-globe"></i> <span>اردو</span>
+            </button>
+            <a href="/cart" class="cart-icon-btn">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+            {% if session.get('admin') %}
+                <a href="/admin" class="nav-btn nav-btn-outline"><i class="fa-solid fa-lock"></i> Admin Dashboard</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- CART CONTAINER -->
+    <div style="padding: 40px 6% 80px 6%; max-width: 1100px; margin: 0 auto; position: relative; z-index: 2;">
+        <h2
+            style="font-family: var(--font-heading); color: var(--primary-purple); font-size: 32px; margin-bottom: 25px;">
+            Your Shopping Cart</h2>
+
+        <!-- DYNAMIC FREE SHIPPING PROGRESS BAR -->
+        <div class="shipping-progress-box" id="shippingProgressBox">
+            <div
+                style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #8C6A28;">
+                <span id="shippingProgressText"><i class="fa-solid fa-gift"></i> Add Rs. 30,000 to unlock FREE Express
+                    Shipping!</span>
+                <span id="shippingPercentText">0%</span>
+            </div>
+            <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="shippingProgressBar" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <div id="cartContentGrid" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 35px;">
+            <!-- Cart Items List -->
+            <div class="data-table-card" style="padding: 20px;">
+                <div id="cartItemsContainer">
+                    <p style="text-align: center; padding: 40px; color: var(--text-muted);">Your cart is currently
+                        empty.</p>
+                </div>
+            </div>
+
+            <!-- Order Summary & 50% Payment Calculation -->
+            <div class="checkout-card">
+                <h3>Order Summary</h3>
+                <div style="margin-bottom: 15px; font-size: 14.5px;">
+                    <div
+                        style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light);">
+                        <span>Items Subtotal:</span>
+                        <strong id="cartSubtotal">Rs. 0</strong>
+                    </div>
+                    <div
+                        style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light); color: var(--accent-pink);">
+                        <span><i class="fa-solid fa-truck-fast"></i> Delivery Fee:</span>
+                        <strong id="cartDeliveryText">Rs. 350</strong>
+                    </div>
+                    <div
+                        style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light); font-size: 16px; color: var(--primary-purple);">
+                        <span>Grand Total Bill:</span>
+                        <strong id="cartGrandTotal">Rs. 0</strong>
+                    </div>
+                    <div
+                        style="display: flex; justify-content: space-between; padding: 12px 0; background: #FFF9EC; margin: 12px 0; padding: 12px; border-radius: 6px; border: 1px solid #F3E0B5; color: #8C6A28; font-weight: 700;">
+                        <span><i class="fa-solid fa-receipt"></i> 50% Advance Payable Now:</span>
+                        <strong id="cartAdvance">Rs. 0</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; color: #123B32;">
+                        <span>50% Remaining (Before Dispatch / COD):</span>
+                        <strong id="cartRemaining">Rs. 0</strong>
+                    </div>
+                </div>
+
+                <div
+                    style="margin: 20px 0; padding: 12px; background: var(--soft-pink); border-radius: 6px; font-size: 12px; color: var(--primary-purple);">
+                    <i class="fa-solid fa-circle-info" style="color: var(--accent-pink);"></i> 50% advance payment is
+                    required to confirm order stitching & customization.
+                </div>
+
+                <button onclick="proceedToCheckout()" class="btn-gold" style="width: 100%; text-align: center;"><i
+                        class="fa-solid fa-lock"></i> Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-bottom">
+            <p>© 2026 ZAWARIA Luxury Fashion. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const FREE_SHIPPING_THRESHOLD = 30000;
+
+        function loadCart() {
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            let container = document.getElementById('cartItemsContainer');
+
+            if (cart.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fa-solid fa-bag-shopping" style="font-size: 48px; color: var(--border-light);"></i><p style="margin-top: 15px; color: var(--text-muted);">Your cart is empty.</p><a href="/collections" class="btn-gold" style="display: inline-block; margin-top: 15px;">Shop Collections</a></div>';
+                document.getElementById('cartSubtotal').innerText = 'Rs. 0';
+                document.getElementById('cartGrandTotal').innerText = 'Rs. 0';
+                document.getElementById('cartAdvance').innerText = 'Rs. 0';
+                document.getElementById('cartRemaining').innerText = 'Rs. 0';
+                document.getElementById('cartCount').innerText = 0;
+                document.getElementById('shippingProgressBar').style.width = '0%';
+                document.getElementById('shippingPercentText').innerText = '0%';
+                return;
+            }
+
+            let html = '<table class="data-table"><thead><tr><th>Item</th><th>Size</th><th>Price</th><th>Qty</th><th>Subtotal</th><th>Action</th></tr></thead><tbody>';
+            let itemsSubtotal = 0;
+
+            cart.forEach((item, index) => {
+                let sub = item.price * item.qty;
+                itemsSubtotal += sub;
+                html += `
+                    <tr>
+                        <td style="display: flex; align-items: center; gap: 12px;">
+                            <img src="/static/images/${item.image}" style="width: 50px; height: 60px; object-fit: cover; border-radius: 4px;">
+                            <div><strong>${item.name}</strong></div>
+                        </td>
+                        <td><span class="status-badge status-approved">${item.size}</span></td>
+                        <td>Rs. ${item.price.toLocaleString()}</td>
+                        <td>
+                            <button onclick="changeQty(${index}, -1)" style="padding: 2px 8px;">-</button>
+                            <strong style="padding: 0 6px;">${item.qty}</strong>
+                            <button onclick="changeQty(${index}, 1)" style="padding: 2px 8px;">+</button>
+                        </td>
+                        <td><strong>Rs. ${sub.toLocaleString()}</strong></td>
+                        <td><button onclick="removeItem(${index})" style="background: none; border: none; color: #d9534f; cursor: pointer;"><i class="fa-solid fa-trash"></i></button></td>
+                    </tr>
+                `;
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+
+            let deliveryFee = itemsSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 350;
+            let grandTotal = itemsSubtotal + deliveryFee;
+            let advance = grandTotal * 0.50;
+            let remaining = grandTotal * 0.50;
+
+            // Shipping Progress Calculation
+            let progressPct = Math.min(100, Math.round((itemsSubtotal / FREE_SHIPPING_THRESHOLD) * 100));
+            document.getElementById('shippingProgressBar').style.width = progressPct + '%';
+            document.getElementById('shippingPercentText').innerText = progressPct + '%';
+
+            if (itemsSubtotal >= FREE_SHIPPING_THRESHOLD) {
+                document.getElementById('shippingProgressText').innerHTML = '<i class="fa-solid fa-circle-check" style="color: #28a745;"></i> 🎉 Congratulations! You unlocked FREE Nationwide Express Shipping!';
+                document.getElementById('cartDeliveryText').innerText = 'FREE (Rs. 0)';
+                document.getElementById('cartDeliveryText').style.color = '#28a745';
+            } else {
+                let needed = FREE_SHIPPING_THRESHOLD - itemsSubtotal;
+                document.getElementById('shippingProgressText').innerHTML = '<i class="fa-solid fa-gift"></i> Add Rs. ' + needed.toLocaleString() + ' more to unlock FREE Express Shipping!';
+                document.getElementById('cartDeliveryText').innerText = 'Rs. 350';
+                document.getElementById('cartDeliveryText').style.color = 'var(--accent-pink)';
+            }
+
+            document.getElementById('cartSubtotal').innerText = `Rs. ${itemsSubtotal.toLocaleString()}`;
+            document.getElementById('cartGrandTotal').innerText = `Rs. ${grandTotal.toLocaleString()}`;
+            document.getElementById('cartAdvance').innerText = `Rs. ${advance.toLocaleString()}`;
+            document.getElementById('cartRemaining').innerText = `Rs. ${remaining.toLocaleString()}`;
+            document.getElementById('cartCount').innerText = cart.reduce((s, i) => s + i.qty, 0);
+        }
+
+        function changeQty(index, delta) {
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) cart.splice(index, 1);
+            localStorage.setItem('zawaria_cart', JSON.stringify(cart));
+            loadCart();
+        }
+
+        function removeItem(index) {
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            cart.splice(index, 1);
+            localStorage.setItem('zawaria_cart', JSON.stringify(cart));
+            loadCart();
+        }
+
+        function proceedToCheckout() {
+            let cart = JSON.parse(localStorage.getItem('zawaria_cart') || '[]');
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            window.location.href = "/checkout";
+        }
+
+        document.addEventListener('DOMContentLoaded', loadCart);
+    </script>
+    <script src="{{ url_for('static', filename='js/theme_lang.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ZAWARIYA | Pakistani Dresses</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">ZAWARIYA</div>
+
+    <div class="nav-right">
+
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#collection">Collections</a></li>
+            <li><a href="#collection">New Arrivals</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="/cart">🛒 Cart</a></li>
+            <li><a href="/login">Admin</a></li>
+        </ul>
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search Dresses..."
+            >
+
+            <button>🔍</button>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <h1>Grace in Every Style</h1>
+
+    <p>
+        Discover elegant Pakistani dresses specially designed
+        for modern women.
+    </p>
+
+    <a href="#collection">
+        <button>Shop Now</button>
+    </a>
+
+</section>
+
+
+<!-- ================= FEATURED COLLECTION ================= -->
+
+<section class="featured" id="collection">
+
+    <h2>Featured Collection</h2>
+
+    <div class="product-container">
+
+        {% for product in products %}
+
+        <div class="product-card">
+
+            <!-- Product Image -->
+
+            <img
+                src="{{ url_for('static', filename='images/' + product.image) }}"
+                alt="{{ product.name }}"
+            >
+
+            <div class="product-info">
+
+                <h3>{{ product.name }}</h3>
+
+                <p class="price">
+                    Rs. {{ "{:,}".format(product.price) }}
+                </p>
+
+                <p class="rating">
+                    ⭐⭐⭐⭐⭐
+                </p>
+
+                {% if product.description %}
+
+                <p class="description">
+                    {{ product.description }}
+                </p>
+
+                {% endif %}
+
+                <div class="sizes">
+
+                    <span>S</span>
+                    <span>M</span>
+                    <span>L</span>
+                    <span>XL</span>
+
+                </div>
+
+                <a href="/cart">
+                    <button
+                        onclick="addToCart('{{ product.name }}', {{ product.price }})">
+                        Add to Cart
+                    </button>
+                </a>
+
+                <a href="/checkout">
+                    <button class="details-btn">
+                        Buy Now
+                    </button>
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- ================= WHY CHOOSE US ================= -->
+
+<section class="featured">
+
+    <h2>Why Choose ZAWARIYA?</h2>
+
+    <div class="product-container">
+
+        <div class="product-card">
+
+            <div class="product-info">
+
+                <h3>✨ Premium Quality</h3>
+
+                <p>
+                    Luxury Pakistani stitched & unstitched collections.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="product-card">
+
+            <div class="product-info">
+
+                <h3>📏 Custom Stitching</h3>
+
+                <p>
+                    Provide your own measurements for perfect fitting.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="product-card">
+
+            <div class="product-info">
+
+                <h3>💳 Half Payment Available</h3>
+
+                <p>
+                    Pay 50% advance and remaining before dispatch.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CONTACT ================= -->
+
+<section class="contact" id="contact">
+
+    <h2>Contact Us</h2>
+
+    <div class="contact-box">
+
+        <h3>ZAWARIYA</h3>
+
+        <p>Elegance • Fashion • Confidence</p>
+
+        <p>
+            <strong>📞 Phone / WhatsApp:</strong>
+            0304-0530538
+        </p>
+
+        <p>
+            <strong>📧 Email:</strong>
+            mariamhanif015@gmail.com
+        </p>
+
+        <p>
+            <strong>🚚 Delivery:</strong>
+            All Over Pakistan
+        </p>
+
+        <p>
+            <strong>💳 Payment:</strong>
+            50% Advance + Remaining Before Dispatch
+        </p>
+
+        <p>
+            <strong>✂️ Custom Stitching:</strong>
+            Available
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h2>ZAWARIYA</h2>
+
+    <p>Elegance • Fashion • Confidence</p>
+
+    <p>
+        Cash on Delivery | Half Payment | Bank Transfer
+    </p>
+
+    <p>
+        © 2026 ZAWARIYA. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>

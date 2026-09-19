@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Profit & Cost Margin Analysis | ZAWARIA Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background: #F4F6F6;">
+
+    <!-- ADMIN HEADER -->
+    <header class="admin-header">
+        <div>
+            <h2><i class="fa-solid fa-chart-line" style="color: var(--primary-gold); margin-right: 10px;"></i> ZAWARIA Financial Profit & Margin Analysis</h2>
+            <p style="font-size: 12px; color: var(--primary-gold);">Detailed Cost of Goods Sold (COGS), Margin Metrics & Inventory Value Breakdown</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <a href="/admin" class="nav-btn nav-btn-outline" style="border-color: var(--primary-gold); color: var(--primary-gold);">
+                <i class="fa-solid fa-arrow-left"></i> Back to Main Admin
+            </a>
+            <a href="/logout" class="nav-btn nav-btn-outline" style="border-color: #d9534f; color: #d9534f;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="padding: 15px 6%;">
+        {% for category, message in messages %}
+          <div style="padding: 12px 20px; border-radius: 6px; font-size: 14px; background: #D4EDDA; color: #155724; font-weight: 600;">
+            {{ message }}
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- FINANCIAL ANALYTICS HIGHLIGHTS -->
+    <div class="analytics-grid" style="padding: 30px 6%;">
+        <div class="stat-card">
+            <div class="stat-title"><i class="fa-solid fa-sack-dollar" style="color: #8C6A28; margin-right: 6px;"></i> Total Gross Sales</div>
+            <div class="stat-value">Rs. {{ "{:,.0f}".format(analytics['total_sales']) }}</div>
+            <div class="stat-sub">From {{ analytics['total_orders'] }} Executed Orders</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-title"><i class="fa-solid fa-boxes-packing" style="color: #d9534f; margin-right: 6px;"></i> Total COGS Cost</div>
+            <div class="stat-value" style="color: #c9302c;">Rs. {{ "{:,.0f}".format(analytics['total_cost']) }}</div>
+            <div class="stat-sub">Direct Production & Tailoring Costs</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-title"><i class="fa-solid fa-vault" style="color: #28a745; margin-right: 6px;"></i> Net Business Profit</div>
+            <div class="stat-value" style="color: #28a745;">Rs. {{ "{:,.0f}".format(analytics['net_profit']) }}</div>
+            <div class="stat-sub">Overall Net Profit Margin: <strong>{{ analytics['profit_margin'] }}%</strong></div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-title"><i class="fa-solid fa-warehouse" style="color: var(--primary-purple); margin-right: 6px;"></i> Inventory Capital Value</div>
+            <div class="stat-value" style="color: var(--primary-purple);">Rs. {{ "{:,.0f}".format(analytics['total_inventory_cost']) }}</div>
+            <div class="stat-sub">Potential Revenue: Rs. {{ "{:,.0f}".format(analytics['total_potential_revenue']) }}</div>
+        </div>
+    </div>
+
+    <!-- PRODUCT COST & PROFIT MARGIN TABLE -->
+    <section class="admin-section" style="padding: 0 6% 60px 6%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h3 style="font-family: var(--font-heading); color: var(--primary-dark); font-size: 22px;">Per-Product Profit Margin & Markup Breakdown</h3>
+                <p style="font-size: 13px; color: var(--text-muted);">Itemized cost analysis, gross margins, markup percentages, and inventory valuation</p>
+            </div>
+            <button onclick="window.print()" class="btn-card-secondary" style="padding: 8px 16px; font-size: 12px; cursor: pointer;">
+                <i class="fa-solid fa-print"></i> Print Profit Report
+            </button>
+        </div>
+
+        <div class="data-table-card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Product & Category</th>
+                        <th>Selling Price</th>
+                        <th>Cost Price (COGS)</th>
+                        <th>Net Profit / Item</th>
+                        <th>Margin %</th>
+                        <th>Markup %</th>
+                        <th>Stock Count</th>
+                        <th>Inventory Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in products %}
+                    <tr>
+                        <td style="display: flex; align-items: center; gap: 12px;">
+                            <img src="/static/images/{{ p['image'] }}" style="width: 45px; height: 55px; object-fit: cover; border-radius: 4px;">
+                            <div>
+                                <strong>{{ p['name'] }}</strong><br>
+                                <small style="color: var(--accent-pink); font-weight: 600;">{{ p['category'] }}</small>
+                            </div>
+                        </td>
+                        <td><strong>Rs. {{ "{:,.0f}".format(p['price']) }}</strong></td>
+                        <td><span style="color: #666;">Rs. {{ "{:,.0f}".format(p['cost_price']) }}</span></td>
+                        <td><strong style="color: #28a745;">Rs. {{ "{:,.0f}".format(p['profit_per_unit']) }}</strong></td>
+                        <td>
+                            <span style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 12px;">
+                                {{ p['margin_pct'] }}%
+                            </span>
+                        </td>
+                        <td><span style="font-weight: 600; color: #555;">{{ p['markup_pct'] }}%</span></td>
+                        <td><strong>{{ p.get('stock', 0) }} units</strong></td>
+                        <td><strong>Rs. {{ "{:,.0f}".format(p['price'] * p.get('stock', 0)) }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</body>
+</html>

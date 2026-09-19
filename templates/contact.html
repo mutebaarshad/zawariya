@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | ZAWARIA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="brand-logo-link">
+            <img src="{{ url_for('static', filename='images/zawariya_logo.svg') }}" alt="ZAWARIA Luxury Logo" class="brand-logo-img">
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="/">Home</a></li>
+            <li><a href="/collections">Collections</a></li>
+            <li><a href="/contact" class="active">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <div style="padding: 60px 6%; max-width: 900px; margin: 0 auto;">
+        <h2 style="font-family: var(--font-heading); color: var(--primary-dark); font-size: 36px; text-align: center; margin-bottom: 30px;">Get in Touch with ZAWARIA</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+            <div class="checkout-card">
+                <h3>Contact Details</h3>
+                <p style="margin-bottom: 12px;"><i class="fa-solid fa-phone" style="color: var(--primary-gold);"></i> <strong>Phone / WhatsApp:</strong> 0304-0530538</p>
+                <p style="margin-bottom: 12px;"><i class="fa-solid fa-envelope" style="color: var(--primary-gold);"></i> <strong>Email:</strong> mariamhanif015@gmail.com</p>
+                <p style="margin-bottom: 12px;"><i class="fa-solid fa-truck" style="color: var(--primary-gold);"></i> <strong>Delivery:</strong> All Over Pakistan</p>
+                <p><i class="fa-solid fa-clock" style="color: var(--primary-gold);"></i> <strong>Stitching & Delivery Time:</strong> 25–28 Working Days</p>
+
+                <a href="https://wa.me/923040530538" class="btn-gold" style="display: block; text-align: center; margin-top: 25px;"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a>
+
+                <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <a href="https://www.instagram.com/zawar_iaa?stkn=MWs2cjUwN3djYm91dA==" target="_blank" class="btn-card-secondary" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; text-decoration: none; padding: 10px;">
+                        <i class="fa-brands fa-instagram" style="font-size: 18px; color: #E1306C;"></i> Instagram
+                    </a>
+                    <a href="https://www.tiktok.com/@zawar_ia?_r=1&_t=ZS-99jKQJmPCd7" target="_blank" class="btn-card-secondary" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; text-decoration: none; padding: 10px;">
+                        <i class="fa-brands fa-tiktok" style="font-size: 18px; color: #000000;"></i> TikTok
+                    </a>
+                </div>
+            </div>
+
+            <div class="checkout-card">
+                <h3>Send Us a Message</h3>
+                <form onsubmit="event.preventDefault(); alert('Thank you! Your message has been sent to our customer care team.');">
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" class="form-control" required placeholder="Ayesha Khan">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone / WhatsApp</label>
+                        <input type="tel" class="form-control" required placeholder="0304-XXXXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea class="form-control" rows="4" required placeholder="Inquire about custom stitching, sizing, or order status..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-card-primary" style="width: 100%; padding: 12px;">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

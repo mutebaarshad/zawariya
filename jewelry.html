@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Jewelry | ZAWARIA</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .jewelry-hero {
+            text-align: center;
+            padding: 90px 20px;
+            background: linear-gradient(135deg, #F8EAF4, #F2EBFF);
+        }
+
+        .jewelry-hero .flower {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .jewelry-hero h1 {
+            font-family: Georgia, serif;
+            font-size: 58px;
+            color: #6A3FA0;
+            margin-bottom: 18px;
+        }
+
+        .jewelry-hero p {
+            max-width: 700px;
+            margin: auto;
+            color: #666;
+            font-size: 19px;
+            line-height: 1.8;
+        }
+
+        .jewelry-products {
+            padding: 90px 8%;
+            background: #F9F5FF;
+        }
+
+        .jewelry-products h2 {
+            text-align: center;
+            color: #6A3FA0;
+            font-size: 42px;
+            margin-bottom: 50px;
+        }
+
+        .jewelry-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(260px, 1fr)
+            );
+            gap: 35px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .jewelry-product-card {
+            background: white;
+            padding: 45px 30px;
+            border-radius: 25px;
+            text-align: center;
+            border: 2px solid #EEE6FA;
+            box-shadow: 0 12px 30px rgba(106,63,160,.10);
+            transition: .4s;
+        }
+
+        .jewelry-product-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 45px rgba(106,63,160,.18);
+        }
+
+        .jewelry-icon {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 25px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: linear-gradient(
+                135deg,
+                #F8E5F0,
+                #EDE2FF
+            );
+
+            font-size: 65px;
+        }
+
+        .jewelry-product-card h3 {
+            color: #4B2E83;
+            font-size: 29px;
+            margin-bottom: 15px;
+        }
+
+        .jewelry-product-card p {
+            color: #666;
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        .coming-soon {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 9px 20px;
+            border-radius: 25px;
+            background: #F4E8FF;
+            color: #6A3FA0;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .jewelry-note {
+            max-width: 800px;
+            margin: 60px auto 0;
+            padding: 25px;
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            border: 2px solid #EEE6FA;
+        }
+
+        .jewelry-note h3 {
+            color: #E75480;
+            margin-bottom: 10px;
+        }
+
+        .back-home {
+            display: block;
+            width: fit-content;
+            margin: 50px auto 0;
+            text-decoration: none;
+        }
+
+        .back-home button {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 30px;
+            background: #6A3FA0;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .back-home button:hover {
+            background: #E75480;
+        }
+
+        @media (max-width: 768px) {
+
+            .jewelry-hero h1 {
+                font-size: 42px;
+            }
+
+            .jewelry-products h2 {
+                font-size: 34px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        ZAWARIA
+    </div>
+
+    <div class="nav-right">
+
+        <ul>
+
+            <li>
+                <a href="/">Home</a>
+            </li>
+
+            <li>
+                <a href="/collections">Collections</a>
+            </li>
+
+            <li>
+                <a href="/jewelry">Jewelry</a>
+            </li>
+
+            <li>
+                <a href="/cart">🛒 Cart</a>
+            </li>
+
+            <li>
+                <a href="/login">Admin</a>
+            </li>
+
+        </ul>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="jewelry-hero">
+
+    <div class="flower">
+        🌸
+    </div>
+
+    <h1>
+        ZAWARIA Jewelry
+    </h1>
+
+    <p>
+        Complete your ZAWARIA look with elegant
+        accessories designed to add a graceful
+        finishing touch.
+    </p>
+
+</section>
+
+
+<!-- ================= JEWELRY ================= -->
+
+<section class="jewelry-products">
+
+    <h2>
+        ✨ Our Jewelry Collection
+    </h2>
+
+
+    <div class="jewelry-grid">
+
+
+        <!-- EARRINGS -->
+
+        <div class="jewelry-product-card">
+
+            <div class="jewelry-icon">
+                💎
+            </div>
+
+            <h3>
+                Earrings
+            </h3>
+
+            <p>
+                Elegant earrings designed to complement
+                both traditional and modern Pakistani outfits.
+            </p>
+
+            <span class="coming-soon">
+                Collection Coming Soon
+            </span>
+
+        </div>
+
+
+        <!-- BRACELETS -->
+
+        <div class="jewelry-product-card">
+
+            <div class="jewelry-icon">
+                ✨
+            </div>
+
+            <h3>
+                Bracelets
+            </h3>
+
+            <p>
+                Delicate and graceful bracelets for a
+                beautiful finishing touch to your outfit.
+            </p>
+
+            <span class="coming-soon">
+                Collection Coming Soon
+            </span>
+
+        </div>
+
+
+        <!-- RINGS -->
+
+        <div class="jewelry-product-card">
+
+            <div class="jewelry-icon">
+                💍
+            </div>
+
+            <h3>
+                Rings
+            </h3>
+
+            <p>
+                Beautiful rings that add effortless
+                elegance to every special occasion.
+            </p>
+
+            <span class="coming-soon">
+                Collection Coming Soon
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- NOTE -->
+
+    <div class="jewelry-note">
+
+        <h3>
+            🌸 Something Beautiful Is Coming
+        </h3>
+
+        <p>
+            Our jewelry collection is currently being
+            prepared. Soon you will be able to explore
+            ZAWARIA earrings, bracelets and rings here.
+        </p>
+
+    </div>
+
+
+    <a href="/" class="back-home">
+
+        <button>
+            ← Back to Home
+        </button>
+
+    </a>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <h2>
+        ZAWARIA
+    </h2>
+
+    <p>
+        Elegance • Fashion • Confidence
+    </p>
+
+    <p>
+        © 2026 ZAWARIA. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
